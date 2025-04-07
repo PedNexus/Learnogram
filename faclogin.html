@@ -1,150 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Login Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: hwb(0 100% 0%);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: hwb(0 100% 0%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-        .container {
-            background-color: rgb(10, 252, 42);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+        .container {
+            background-color: rgb(10, 252, 42);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
 
-        h2 {
-            color: #333;
-        }
+        h2 {
+            color: #333;
+        }
 
-        label {
-            display: inline-block;
-            margin-bottom: 5px;
-            color: #555;
-        }
+        label {
+            display: inline-block;
+            margin-bottom: 5px;
+            color: #555;
+        }
 
-        input[type="text"],
-        input[type="password"],
-        button {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid hsl(251, 96%, 52%);
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
+        input[type="text"],
+        input[type="password"],
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid hsl(251, 96%, 52%);
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
 
-        button {
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+        button:hover {
+            background-color: #0056b3;
+        }
 
-        #signUpForm {
-            display: none;
-        }
+        #signUpForm {
+            display: none;
+        }
 
-        .signUpButton {
-            background-color: hsl(0, 100%, 51%);
-        }
+        .signUpButton {
+            background-color: hsl(0, 100%, 51%);
+        }
 
-        .signUpButton:hover {
-            background-color: hsl(0, 94%, 49%);
-        }
+        .signUpButton:hover {
+            background-color: hsl(0, 94%, 49%);
+        }
 
-        #welcomeMessage {
-            display: none;
-            margin-top: 20px;
-        }
-    </style>
+        #welcomeMessage {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .loading {
+            display: none;
+            margin: 10px 0;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Staff Login</h2>
-        <form id="loginForm">
-            <label for="username">Username:</label><br>
-            <input type="text" id="username" name="username" required><br>
-            <label for="password">Password:</label><br>
-            <input type="password" id="password" name="password" required><br><br>
-            <button type="submit">Login</button>
-        </form>
-        <button class="signUpButton" onclick="showSignUpForm()">Add New Account</button>
+    <div class="container">
+        <h2>Staff Login</h2>
+        <form id="loginForm">
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username" required><br>
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+            <button type="submit">Login</button>
+        </form>
+        <button class="signUpButton" onclick="showSignUpForm()">Add New Account</button>
+        <div id="loading" class="loading">Loading...</div>
 
-        <div id="signUpForm">
-            <h2>Sign Up</h2>
-            <form id="newAccountForm">
-                <label for="newUsername">New Username:</label><br>
-                <input type="text" id="newUsername" name="newUsername" required><br>
-                <label for="newPassword">New Password:</label><br>
-                <input type="password" id="newPassword" name="newPassword" required><br><br>
-                <button class="signUpButton" type="submit">Create Account</button>
-            </form>
-        </div>
+        <div id="signUpForm">
+            <h2>Sign Up</h2>
+            <form id="newAccountForm">
+                <label for="newUsername">New Username:</label><br>
+                <input type="text" id="newUsername" name="newUsername" required><br>
+                <label for="newPassword">New Password:</label><br>
+                <input type="password" id="newPassword" name="newPassword" required><br><br>
+                <button class="signUpButton" type="submit">Create Account</button>
+            </form>
+        </div>
 
-        <div id="welcomeMessage">
-            <p>Welcome, <span id="welcomeUsername"></span>!</p>
-            <button onclick="openVideos()">View Videos</button>
-        </div>
-    </div>
+        <div id="welcomeMessage">
+            <p>Welcome, <span id="welcomeUsername"></span>!</p>
+            <button onclick="openVideos()">View Videos</button>
+        </div>
+    </div>
 
-<script>
-    let globalAccounts = [];
+    <script>
+        // GitHub repository details (UPDATE THESE WITH YOUR OWN REPO)
+        const githubUsername = 'YOUR_GITHUB_USERNAME';
+        const repoName = 'YOUR_REPO_NAME';
+        const credentialsFile = 'credentials.json';
+        const credentialsUrl = `https://raw.githubusercontent.com/${githubUsername}/${repoName}/main/${credentialsFile}`;
+        
+        // Function to show sign up form
+        function showSignUpForm() {
+            document.getElementById('signUpForm').style.display = 'block';
+        }
+    
+        // Function to show loading indicator
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+        
+        // Function to fetch credentials from GitHub
+        async function fetchCredentials() {
+            showLoading(true);
+            try {
+                const response = await fetch(credentialsUrl);
+                if (!response.ok) throw new Error('Failed to fetch credentials');
+                const data = await response.json();
+                return data.accounts || [];
+            } catch (error) {
+                console.error('Error fetching credentials:', error);
+                return [];
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // Function to save credentials to GitHub (using GitHub API)
+        async function saveCredentials(accounts) {
+            showLoading(true);
+            try {
+                // Note: This would require GitHub API with proper authentication
+                // For simplicity, we'll just store in localStorage as fallback
+                localStorage.setItem('accounts', JSON.stringify(accounts));
+                console.log('Credentials saved locally (GitHub API not implemented)');
+                
+                // In a real implementation, you would:
+                // 1. Use GitHub API to update the file
+                // 2. Need a backend service or GitHub token (not recommended to expose in frontend)
+                return true;
+            } catch (error) {
+                console.error('Error saving credentials:', error);
+                return false;
+            } finally {
+                showLoading(false);
+            }
+        }
+    
+        // Function to handle new account creation
+        document.getElementById('newAccountForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const newUsername = document.getElementById('newUsername').value;
+            const newPassword = document.getElementById('newPassword').value;
+            
+            // Get existing accounts
+            const accounts = await fetchCredentials();
+            
+            // Check if username already exists
+            if (accounts.some(account => account.username === newUsername)) {
+                alert('Username already exists!');
+                return;
+            }
+            
+            // Add new account
+            accounts.push({ username: newUsername, password: newPassword });
+            
+            // Save to GitHub (and localStorage as fallback)
+            const saved = await saveCredentials(accounts);
+            if (saved) {
+                alert('Account created successfully!');
+                document.getElementById('newAccountForm').reset();
+            } else {
+                alert('Account created locally (failed to save to GitHub)');
+            }
+        });
+    
+        // Function to handle login
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Get accounts from GitHub
+            const accounts = await fetchCredentials();
+            
+            // Also check local storage as fallback
+            const localAccounts = JSON.parse(localStorage.getItem('accounts')) || [];
+            const allAccounts = [...accounts, ...localAccounts];
+            
+            const foundAccount = allAccounts.find(account => 
+                account.username === username && account.password === password
+            );
+            
+            if (foundAccount) {
+                alert('Login successful!');
+                // Display welcome message with username
+                document.getElementById('welcomeUsername').textContent = username;
+                document.getElementById('welcomeMessage').style.display = 'block';
+            } else {
+                alert('Invalid username or password');
+            }
+        });
 
-    // Fetch credentials from JSON file on GitHub
-    fetch('credentials.json')
-        .then(response => response.json())
-        .then(data => {
-            globalAccounts = data;
-        })
-        .catch(error => {
-            console.error('Error loading credentials:', error);
-        });
-
-    function showSignUpForm() {
-        document.getElementById('signUpForm').style.display = 'block';
-    }
-
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const foundAccount = globalAccounts.find(account => account.username === username && account.password === password);
-        if (foundAccount) {
-            alert('Login successful!');
-            document.getElementById('welcomeUsername').textContent = username;
-            document.getElementById('welcomeMessage').style.display = 'block';
-        } else {
-            alert('Invalid username or password');
-        }
-    });
-
-    // Disable signup functionality as we can't write to file
-    document.getElementById('newAccountForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        alert('Sorry, account creation is disabled without a backend.');
-    });
-
-    function openVideos() {
-        window.open('video_player.html', '_blank');
-    }
-</script>
-
-    
+        // Function to open videos
+        function openVideos() {
+            window.open('video_player.html', '_blank');
+        }
+    </script>
+    
 </body>
 </html>
