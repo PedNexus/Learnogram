@@ -103,51 +103,48 @@
         </div>
     </div>
 
-    <script>
-        // Function to show sign up form
-        function showSignUpForm() {
-            document.getElementById('signUpForm').style.display = 'block';
-        }
-    
-        // Function to save new account to localStorage
-        function saveNewAccount(username, password) {
-            const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-            accounts.push({ username, password });
-            localStorage.setItem('accounts', JSON.stringify(accounts));
-        }
-    
-        // Function to handle new account creation
-        document.getElementById('newAccountForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const newUsername = document.getElementById('newUsername').value;
-            const newPassword = document.getElementById('newPassword').value;
-            saveNewAccount(newUsername, newPassword);
-            alert('Account created successfully!');
-            document.getElementById('newAccountForm').reset();
-        });
-    
-        // Function to handle login
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-            const foundAccount = accounts.find(account => account.username === username && account.password === password);
-            if (foundAccount) {
-                alert('Login successful!');
-                // Display welcome message with username
-                document.getElementById('welcomeUsername').textContent = username;
-                document.getElementById('welcomeMessage').style.display = 'block';
-            } else {
-                alert('Invalid username or password');
-            }
+<script>
+    let globalAccounts = [];
+
+    // Fetch credentials from JSON file on GitHub
+    fetch('credentials.json')
+        .then(response => response.json())
+        .then(data => {
+            globalAccounts = data;
+        })
+        .catch(error => {
+            console.error('Error loading credentials:', error);
         });
 
-        // Function to open videos
-        function openVideos() {
-            window.open('video_player.html', '_blank');
+    function showSignUpForm() {
+        document.getElementById('signUpForm').style.display = 'block';
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const foundAccount = globalAccounts.find(account => account.username === username && account.password === password);
+        if (foundAccount) {
+            alert('Login successful!');
+            document.getElementById('welcomeUsername').textContent = username;
+            document.getElementById('welcomeMessage').style.display = 'block';
+        } else {
+            alert('Invalid username or password');
         }
-    </script>
+    });
+
+    // Disable signup functionality as we can't write to file
+    document.getElementById('newAccountForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        alert('Sorry, account creation is disabled without a backend.');
+    });
+
+    function openVideos() {
+        window.open('video_player.html', '_blank');
+    }
+</script>
+
     
 </body>
 </html>
