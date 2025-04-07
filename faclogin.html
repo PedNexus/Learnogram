@@ -73,10 +73,9 @@
             margin-top: 20px;
         }
         
-        .loading {
+        #loading {
             display: none;
             margin: 10px 0;
-            color: #333;
         }
     </style>
 </head>
@@ -90,8 +89,8 @@
             <input type="password" id="password" name="password" required><br><br>
             <button type="submit">Login</button>
         </form>
+        <div id="loading">Loading...</div>
         <button class="signUpButton" onclick="showSignUpForm()">Add New Account</button>
-        <div id="loading" class="loading">Loading...</div>
 
         <div id="signUpForm">
             <h2>Sign Up</h2>
@@ -111,56 +110,98 @@
     </div>
 
     <script>
-        // GitHub repository details (UPDATE THESE WITH YOUR OWN REPO)
-        const githubUsername = 'YOUR_GITHUB_USERNAME';
-        const repoName = 'YOUR_REPO_NAME';
-        const credentialsFile = 'credentials.json';
-        const credentialsUrl = `https://raw.githubusercontent.com/${githubUsername}/${repoName}/main/${credentialsFile}`;
+        // GitHub Gist configuration
+        const GIST_ID = ''; // You'll need to create this (instructions below)
+        const GIST_FILENAME = 'accounts.json';
+        const GITHUB_TOKEN = ''; // Personal access token (instructions below)
         
         // Function to show sign up form
         function showSignUpForm() {
             document.getElementById('signUpForm').style.display = 'block';
         }
     
-        // Function to show loading indicator
-        function showLoading(show) {
-            document.getElementById('loading').style.display = show ? 'block' : 'none';
-        }
-        
-        // Function to fetch credentials from GitHub
-        async function fetchCredentials() {
-            showLoading(true);
+        // Function to save new account to GitHub Gist
+        async function saveNewAccount(username, password) {
             try {
-                const response = await fetch(credentialsUrl);
-                if (!response.ok) throw new Error('Failed to fetch credentials');
-                const data = await response.json();
-                return data.accounts || [];
-            } catch (error) {
-                console.error('Error fetching credentials:', error);
-                return [];
-            } finally {
-                showLoading(false);
-            }
-        }
-        
-        // Function to save credentials to GitHub (using GitHub API)
-        async function saveCredentials(accounts) {
-            showLoading(true);
-            try {
-                // Note: This would require GitHub API with proper authentication
-                // For simplicity, we'll just store in localStorage as fallback
-                localStorage.setItem('accounts', JSON.stringify(accounts));
-                console.log('Credentials saved locally (GitHub API not implemented)');
+                document.getElementById('loading').style.display = 'block';
                 
-                // In a real implementation, you would:
-                // 1. Use GitHub API to update the file
-                // 2. Need a backend service or GitHub token (not recommended to expose in frontend)
+                // First get existing accounts
+                let accounts = [];
+                try {
+                    const response = await fetch(`https://api.github.com/gists/${GIST_ID}`);
+                    const gistData = await response.json();
+                    if (gistData.files && gistData.files[GIST_FILENAME]) {
+                        accounts = JSON.parse(gistData.files[GIST_FILENAME].content);
+                    }
+                } catch (e) {
+                    console.error("Error fetching existing accounts:", e);
+                }
+                
+                // Add new account
+                accounts.push({ username, password });
+                
+                // Update Gist
+                const updateResponse = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        files: {
+                            [GIST_FILENAME]: {
+                                content: JSON.stringify(accounts, null, 2)
+                            }
+                        }
+                    })
+                });
+                
+                if (!updateResponse.ok) {
+                    throw new Error('Failed to update Gist');
+                }
+                
+                // Also save locally for faster access
+                localStorage.setItem('accounts', JSON.stringify(accounts));
+                
+                document.getElementById('loading').style.display = 'none';
                 return true;
             } catch (error) {
-                console.error('Error saving credentials:', error);
+                console.error("Error saving account:", error);
+                document.getElementById('loading').style.display = 'none';
                 return false;
-            } finally {
-                showLoading(false);
+            }
+        }
+    
+        // Function to get accounts from GitHub Gist
+        async function getAccounts() {
+            try {
+                document.getElementById('loading').style.display = 'block';
+                
+                // First try local storage for faster access
+                const localAccounts = localStorage.getItem('accounts');
+                if (localAccounts) {
+                    return JSON.parse(localAccounts);
+                }
+                
+                // If not in local storage, fetch from Gist
+                const response = await fetch(`https://api.github.com/gists/${GIST_ID}`);
+                const gistData = await response.json();
+                
+                if (!gistData.files || !gistData.files[GIST_FILENAME]) {
+                    return [];
+                }
+                
+                const accounts = JSON.parse(gistData.files[GIST_FILENAME].content);
+                
+                // Save to local storage for next time
+                localStorage.setItem('accounts', JSON.stringify(accounts));
+                
+                document.getElementById('loading').style.display = 'none';
+                return accounts;
+            } catch (error) {
+                console.error("Error getting accounts:", error);
+                document.getElementById('loading').style.display = 'none';
+                return [];
             }
         }
     
@@ -170,25 +211,12 @@
             const newUsername = document.getElementById('newUsername').value;
             const newPassword = document.getElementById('newPassword').value;
             
-            // Get existing accounts
-            const accounts = await fetchCredentials();
-            
-            // Check if username already exists
-            if (accounts.some(account => account.username === newUsername)) {
-                alert('Username already exists!');
-                return;
-            }
-            
-            // Add new account
-            accounts.push({ username: newUsername, password: newPassword });
-            
-            // Save to GitHub (and localStorage as fallback)
-            const saved = await saveCredentials(accounts);
-            if (saved) {
+            const success = await saveNewAccount(newUsername, newPassword);
+            if (success) {
                 alert('Account created successfully!');
                 document.getElementById('newAccountForm').reset();
             } else {
-                alert('Account created locally (failed to save to GitHub)');
+                alert('Failed to create account. Please try again.');
             }
         });
     
@@ -198,16 +226,8 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            // Get accounts from GitHub
-            const accounts = await fetchCredentials();
-            
-            // Also check local storage as fallback
-            const localAccounts = JSON.parse(localStorage.getItem('accounts')) || [];
-            const allAccounts = [...accounts, ...localAccounts];
-            
-            const foundAccount = allAccounts.find(account => 
-                account.username === username && account.password === password
-            );
+            const accounts = await getAccounts();
+            const foundAccount = accounts.find(account => account.username === username && account.password === password);
             
             if (foundAccount) {
                 alert('Login successful!');
