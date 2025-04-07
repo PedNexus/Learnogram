@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictionary API Integration</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #0056b3;
+            margin-bottom: 20px;
+        }
+
+        input {
+            font-size: 1.2rem;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        input:focus {
+            box-shadow: 0 0 10px rgba(0, 86, 179, 0.3);
+            outline: none;
+        }
+
+        .btn {
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            border: none;
+            background-color: #0056b3;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            animation: fadeInUp 1.5s ease-in-out;
+        }
+
+        .btn:hover {
+            background-color: #004494;
+            transform: translateY(-3px);
+        }
+
+        .result {
+            margin-top: 20px;
+            animation: fadeInUp 1.5s ease-in-out;
+        }
+
+        .result h2, .result p {
+            color: #333;
+            margin-top: 20px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .home-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .home-button:hover {
+            background-color: #004494;
+        }
+    </style>
+</head>
+<body>
+    <button class="home-button" onclick="window.history.back()">Home</button>
+    <div class="container">
+        <h1>Dictionary</h1>
+        <div class="form-group">
+            <input type="text" id="wordInput" class="form-control form-control-lg" placeholder="Enter a word">
+        </div>
+        <button class="btn" onclick="searchWord()">Search</button>
+        
+        <div class="result">
+            <h2 style="color: #0056b3; font-size: 2rem; font-weight: bold;">Word: <span id="word" style="font-style: italic;"></span></h2>
+            <p style="font-size: 1.2rem; color: #333; font-weight: 500;">Type: <span id="wordType" style="font-style: italic;"></span></p>
+            <p style="font-size: 1.2rem; color: #333;">Definition: <span id="definition" style="font-style: italic;"></span></p>
+            <p style="font-size: 1.2rem; color: #333;">Example: <span id="example" style="font-style: italic;"></span></p>
+        </div>
+    </div>
+
+    <script>
+        function getDefinition(word) {
+            fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    displayDefinition(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching the dictionary data:', error);
+                });
+        }
+
+        function displayDefinition(data) {
+            if (data && data.length > 0) {
+                const word = data[0].word;
+                const wordType = data[0].meanings[0].partOfSpeech;
+                const definition = data[0].meanings[0].definitions[0].definition;
+                const example = data[0].meanings[0].definitions[0].example;
+
+                document.getElementById('word').textContent = word;
+                document.getElementById('wordType').textContent = wordType;
+                document.getElementById('definition').textContent = definition;
+                if (example) {
+                    document.getElementById('example').textContent = `"${example}"`;
+                } else {
+                    document.getElementById('example').textContent = '';
+                }
+            } else {
+                document.getElementById('definition').textContent = 'Definition not found.';
+                document.getElementById('example').textContent = '';
+            }
+        }
+
+        function searchWord() {
+            const word = document.getElementById('wordInput').value;
+            if (word) {
+                getDefinition(word);
+            } else {
+                alert('Please enter a word to search.');
+            }
+        }
+    </script>
+</body>
+</html>

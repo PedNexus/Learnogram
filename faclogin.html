@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: hwb(0 100% 0%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: rgb(10, 252, 42);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        label {
+            display: inline-block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid hsl(251, 96%, 52%);
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #signUpForm {
+            display: none;
+        }
+
+        .signUpButton {
+            background-color: hsl(0, 100%, 51%);
+        }
+
+        .signUpButton:hover {
+            background-color: hsl(0, 94%, 49%);
+        }
+
+        #welcomeMessage {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Staff Login</h2>
+        <form id="loginForm">
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username" required><br>
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+            <button type="submit">Login</button>
+        </form>
+        <button class="signUpButton" onclick="showSignUpForm()">Add New Account</button>
+
+        <div id="signUpForm">
+            <h2>Sign Up</h2>
+            <form id="newAccountForm">
+                <label for="newUsername">New Username:</label><br>
+                <input type="text" id="newUsername" name="newUsername" required><br>
+                <label for="newPassword">New Password:</label><br>
+                <input type="password" id="newPassword" name="newPassword" required><br><br>
+                <button class="signUpButton" type="submit">Create Account</button>
+            </form>
+        </div>
+
+        <div id="welcomeMessage">
+            <p>Welcome, <span id="welcomeUsername"></span>!</p>
+            <button onclick="openVideos()">View Videos</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to show sign up form
+        function showSignUpForm() {
+            document.getElementById('signUpForm').style.display = 'block';
+        }
+    
+        // Function to save new account to localStorage
+        function saveNewAccount(username, password) {
+            const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+            accounts.push({ username, password });
+            localStorage.setItem('accounts', JSON.stringify(accounts));
+        }
+    
+        // Function to handle new account creation
+        document.getElementById('newAccountForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const newUsername = document.getElementById('newUsername').value;
+            const newPassword = document.getElementById('newPassword').value;
+            saveNewAccount(newUsername, newPassword);
+            alert('Account created successfully!');
+            document.getElementById('newAccountForm').reset();
+        });
+    
+        // Function to handle login
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+            const foundAccount = accounts.find(account => account.username === username && account.password === password);
+            if (foundAccount) {
+                alert('Login successful!');
+                // Display welcome message with username
+                document.getElementById('welcomeUsername').textContent = username;
+                document.getElementById('welcomeMessage').style.display = 'block';
+            } else {
+                alert('Invalid username or password');
+            }
+        });
+
+        // Function to open videos
+        function openVideos() {
+            window.open('video.html', '_blank');
+        }
+    </script>
+    
+</body>
+</html>

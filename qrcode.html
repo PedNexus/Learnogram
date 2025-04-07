@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Code Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    h1 {
+        margin-bottom: 20px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+        width: 300px;
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+    input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    #qrCode {
+        margin-top: 20px;
+        max-width: 300px;
+        display: none;
+    }
+</style>
+</head>
+<body>
+    <h1>QR Code Generator</h1>
+    <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" id="title" placeholder="Enter Title">
+    </div>
+    <div class="form-group">
+        <label for="staffName">Staff Name:</label>
+        <input type="text" id="staffName" placeholder="Enter Staff Name">
+    </div>
+    <button onclick="generateQR()">Generate QR Code</button>
+    <canvas id="qrCode"></canvas>
+
+    <script>
+        function generateQR() {
+            var title = document.getElementById('title').value.trim();
+            var staffName = document.getElementById('staffName').value.trim();
+            if (title === '' || staffName === '') {
+                alert('Please fill in both fields.');
+                return;
+            }
+            
+            // Get the current date and time
+            var now = new Date();
+            var formattedDate = now.toLocaleString(); // Formats date and time as "MM/DD/YYYY, HH:MM:SS AM/PM"
+            
+            // Combine the input and current date/time into the desired format
+            var combinedText = staffName + ' ' + title + ' ' + formattedDate + ' - ' + staffName;
+            
+            // Generate the QR code
+            var qr = new QRious({
+                element: document.getElementById('qrCode'),
+                value: combinedText,
+                size: 200
+            });
+            document.getElementById('qrCode').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

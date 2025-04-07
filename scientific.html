@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>JavaScript Scientific Calculator</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+h1 {
+    text-align: center;
+    padding: 23px;
+    background-color: rgb(63, 16, 171); 
+    color: rgb(230, 221, 38);
+}
+.formstyle {
+    width: 320px;
+    margin: auto;
+    border: 3px solid rgb(173, 182, 43); 
+    border-radius: 5px;
+    padding: 20px;
+}
+input[type="button"] {
+    width: 100%;
+    background-color: rgb(63, 16, 171); 
+    color: rgb(230, 221, 38);
+    border-radius: 5px;
+    padding: 20px;
+    margin: 5px 0;
+    font-size: 15px;
+}
+#calc {
+    width: 100%;
+    border: 5px solid rgb(63, 16, 171); 
+    border-radius: 3px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: white;
+    color: black;
+}
+#clear {
+    width: 100%;
+    border-radius: 5px;
+}
+</style>
+</head>
+<body>
+
+<h1>Scientific Calculator</h1>
+<div class="formstyle">
+<form name="calcForm">
+    <input id="calc" type="text" class="form-control" name="display" readonly> <br>
+
+    <div class="row">
+        <div class="col-3 p-1"><input type="button" value="1" onclick="appendValue('1')"></div>
+        <div class="col-3 p-1"><input type="button" value="2" onclick="appendValue('2')"></div>
+        <div class="col-3 p-1"><input type="button" value="3" onclick="appendValue('3')"></div>
+        <div class="col-3 p-1"><input type="button" value="+" onclick="appendValue('+')"></div>
+    </div>
+    <div class="row">
+        <div class="col-3 p-1"><input type="button" value="4" onclick="appendValue('4')"></div>
+        <div class="col-3 p-1"><input type="button" value="5" onclick="appendValue('5')"></div>
+        <div class="col-3 p-1"><input type="button" value="6" onclick="appendValue('6')"></div>
+        <div class="col-3 p-1"><input type="button" value="-" onclick="appendValue('-')"></div>
+    </div>
+    <div class="row">
+        <div class="col-3 p-1"><input type="button" value="7" onclick="appendValue('7')"></div>
+        <div class="col-3 p-1"><input type="button" value="8" onclick="appendValue('8')"></div>
+        <div class="col-3 p-1"><input type="button" value="9" onclick="appendValue('9')"></div>
+        <div class="col-3 p-1"><input type="button" value="*" onclick="appendValue('*')"></div>
+    </div>
+    <div class="row">
+        <div class="col-3 p-1"><input type="button" value="0" onclick="appendValue('0')"></div>
+        <div class="col-3 p-1"><input type="button" value="." onclick="appendValue('.')"></div>
+        <div class="col-3 p-1"><input type="button" value="=" onclick="calculate()"></div>
+        <div class="col-3 p-1"><input type="button" value="/" onclick="appendValue('/')"></div>
+    </div>
+
+    <!-- Advanced Operations -->
+    <div class="row">
+        <div class="col-4 p-1"><input type="button" value="sqrt( )" onclick="sqrt()"></div>
+        <div class="col-4 p-1"><input type="button" value="x^y" onclick="power()"></div>
+        <div class="col-4 p-1"><input type="button" value="log" onclick="log10()"></div>
+    </div>
+    <div class="row">
+        <div class="col-4 p-1"><input type="button" value="sin" onclick="trig('sin')"></div>
+        <div class="col-4 p-1"><input type="button" value="cos" onclick="trig('cos')"></div>
+        <div class="col-4 p-1"><input type="button" value="tan" onclick="trig('tan')"></div>
+    </div>
+    
+    <input type="button" value="Clear All" class="btn btn-danger mt-3" onclick="clearAll()" id="clear">
+</form>
+</div>
+
+<script>
+// Append value to the display
+function appendValue(value) {
+    document.calcForm.display.value += value;
+}
+
+// Clear the display
+function clearAll() {
+    document.calcForm.display.value = '';
+}
+
+// Calculate result
+function calculate() {
+    try {
+        let result = eval(document.calcForm.display.value);
+        document.calcForm.display.value = result;
+    } catch (e) {
+        document.calcForm.display.value = "Error";
+    }
+}
+
+// Calculate square root
+function sqrt() {
+    let current = document.calcForm.display.value;
+    document.calcForm.display.value = Math.sqrt(eval(current));
+}
+
+// Power function (x^y)
+function power() {
+    let base = document.calcForm.display.value;
+    let exponent = prompt("Enter exponent value:");
+    document.calcForm.display.value = Math.pow(eval(base), eval(exponent));
+}
+
+// Logarithm (log base 10)
+function log10() {
+    let value = document.calcForm.display.value;
+    document.calcForm.display.value = Math.log10(eval(value));
+}
+
+// Trigonometric functions (sin, cos, tan)
+function trig(func) {
+    let angle = eval(document.calcForm.display.value);
+    let inRadians = angle * (Math.PI / 180); // Convert degrees to radians
+    switch (func) {
+        case 'sin':
+            document.calcForm.display.value = Math.sin(inRadians);
+            break;
+        case 'cos':
+            document.calcForm.display.value = Math.cos(inRadians);
+            break;
+        case 'tan':
+            document.calcForm.display.value = Math.tan(inRadians);
+            break;
+    }
+}
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pednexus Video Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-top: 20px;
+        }
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .hamburger {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+            z-index: 100;
+            width: 30px;
+            height: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .hamburger div {
+            background-color: #333;
+            height: 4px;
+            border-radius: 2px;
+        }
+        .slide-bar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #34495e;
+            padding: 15px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            transition: left 0.3s ease;
+            z-index: 99;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .slide-bar.open {
+            left: 0;
+        }
+        .slide-bar button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 80%;
+        }
+        .slide-bar button:hover {
+            background-color: #2980b9;
+        }
+        .slide-bar p {
+            margin: 20px 0 10px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li.video-item {
+            background-color: #ecf0f1;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        li.video-item:hover {
+            background-color: #bdc3c7;
+        }
+        a {
+            text-decoration: none;
+            color: #2980b9;
+        }
+        a:hover {
+            color: #1abc9c;
+        }
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+            }
+        }
+    </style>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+        function searchVideos() {
+            var input = document.getElementById('search');
+            var filter = input.value.toLowerCase();
+            var videoItems = document.querySelectorAll('.video-item');
+            videoItems.forEach(function(item) {
+                var videoName = item.getAttribute('data-name').toLowerCase();
+                if (videoName.includes(filter)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function getUserInfo() {
+            return localStorage.getItem('loggedInUser');
+        }
+
+        function toggleSlider() {
+            var slideBar = document.querySelector('.slide-bar');
+            slideBar.classList.toggle('open');
+        }
+
+        window.onload = function() {
+            var username = getUserInfo();
+            if (username) {
+                document.getElementById('welcomeUsername').textContent = username;
+            }
+        };
+    </script>
+</head>
+<body>
+    <h1>WELCOME TO PEDNEXUS</h1>
+    <div class="hamburger" onclick="toggleSlider()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <button onclick="goBack()" style="position: fixed; top: 10px; right: 10px; background-color: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">Logout</button>
+    <div class='slide-bar'>
+        <p>Welcome, <span id="welcomeUsername">User</span>!</p>
+        <button onclick="window.location.href='aptitude.html'">Aptitude</button>
+        <button onclick="window.location.href='facts.html'">Facts</button>
+        <button onclick="window.location.href='discuss.html'">Discussion Forum</button>
+    </div>
+    <div class='container'>
+        <input type="text" id="search" onkeyup="searchVideos()" placeholder="Search for videos..">
+<h2>aris</h2>
+<ul>
+<li class='video-item' data-name='aris aris 7-4-2025, 12-45-10 pm.mp4'><a href='aris/aris aris 7-4-2025, 12-45-10 pm.mp4' target='_blank'>aris aris 7-4-2025, 12-45-10 pm.mp4 - 2025-04-07 12:57:56</a></li>
+</ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Summarizer</title>
+    <!-- Semantic UI CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            position: relative;
+        }
+        .home-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 12px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .container:hover {
+            transform: scale(1.02);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            font-size: 1rem;
+            transition: border-color 0.3s ease-in-out;
+        }
+        textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        .ui.button {
+            background: #007bff;
+            color: #fff;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+        }
+        .ui.button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+        #summary, #stats {
+            margin-top: 20px;
+            border-top: 2px solid #ddd;
+            padding-top: 15px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        #summary {
+            color: #333;
+            font-size: 1.1rem;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #stats {
+            color: #666;
+            font-size: 0.9rem;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="home-button">
+        <button class="ui button" onclick="goHome()">Home</button>
+    </div>
+    <div class="container">
+        <h1>Text Summarizer</h1>
+        <textarea id="inputText" placeholder="Enter your text here..."></textarea><br>
+        <button class="ui button" onclick="handleSummarize()">Summarize</button>
+        <div id="summary"></div>
+        <div id="stats"></div>
+    </div>
+
+    <!-- Semantic UI JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+    <script>
+        function summarizeText(text) {
+            // Split text into sentences
+            let sentences = text.split('.').filter(sentence => sentence.trim() !== '');
+
+            // Basic word frequency analysis
+            let wordCounts = {};
+            let words = text.toLowerCase().split(/\W+/).filter(word => word.length > 2);
+            words.forEach(word => {
+                wordCounts[word] = (wordCounts[word] || 0) + 1;
+            });
+
+            // Score sentences based on word frequency
+            let sentenceScores = sentences.map(sentence => {
+                let score = 0;
+                let wordsInSentence = sentence.toLowerCase().split(/\W+/).filter(word => word.length > 2);
+                wordsInSentence.forEach(word => {
+                    score += wordCounts[word] || 0;
+                });
+                return { sentence, score };
+            });
+
+            // Sort sentences by score
+            sentenceScores.sort((a, b) => b.score - a.score);
+
+            // Take the top 3 sentences as the summary
+            let summary = sentenceScores.slice(0, 3).map(item => item.sentence).join('. ') + '.';
+
+            return summary;
+        }
+
+        function handleSummarize() {
+            let inputText = document.getElementById('inputText').value;
+            let originalWordCount = inputText.split(/\s+/).length;
+            let summary = summarizeText(inputText);
+            let summaryWordCount = summary.split(/\s+/).length;
+
+            document.getElementById('summary').innerText = 'Summary: ' + summary;
+            document.getElementById('stats').innerText = `Original word count: ${originalWordCount}\nSummary word count: ${summaryWordCount}`;
+        }
+
+        function goHome() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>
