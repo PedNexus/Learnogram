@@ -81,76 +81,6 @@
             line-height: 1.6;
         }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
-            font-size: 1.2rem;
-            color: #555;
-        }
-
-        ul li {
-            background: #e1f5fe; /* Light blue background for list items */
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .flip-card {
-            background-color: transparent;
-            width: 250px; /* Reduced width */
-            height: 350px; /* Reduced height */
-            perspective: 1000px;
-            display: inline-block;
-            margin: 10px;
-        }
-
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-            border-radius: 10px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .flip-card:hover .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 10px;
-        }
-
-        .flip-card-front {
-            background-color: #00796b; /* Teal color for the front of the card */
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .flip-card-back {
-            background-color: #ffffff; /* White background for the back of the card */
-            color: #00796b; /* Teal color for text */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            text-align: center;
-            padding: 20px;
-            transform: rotateY(180deg);
-            border-radius: 10px;
-        }
-
         footer {
             background-color: #57a15d; /* Teal color for footer */
             color: #fff;
@@ -162,235 +92,53 @@
             bottom: 0%;
         }
 
-        /* Slider Menu Styles */
-        .sidenav {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            left: 0;
+        .mode-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .mode-button {
             background-color: #00796b;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
             color: white;
-        }
-
-        .sidenav a {
-            padding: 8px 8px 8px 32px;
-            text-decoration: none;
-            font-size: 25px;
-            color: white;
-            display: block;
-            transition: 0.3s;
-        }
-
-        .sidenav a:hover {
-            color: #f1f1f1;
-        }
-
-        .sidenav .closebtn {
-            position: absolute;
-            top: 0;
-            right: 25px;
-            font-size: 36px;
-            margin-left: 50px;
-        }
-
-        #menuButton {
-            font-size: 30px;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 1.1rem;
             cursor: pointer;
-            color: #00796b;
-            margin: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 220px;
         }
 
-        .openbtn {
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        .openbtn:hover {
-            color: #0056b3;
+        .mode-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            background-color: #00695c;
         }
 
     </style>
 </head>
 <body>
-    <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="learnogram.html">Home</a>
-        <a href="dictionary.html">Dictionary</a>
-        <a href="grammar.html">Grammar</a>
-        <a href="summary.html">Summarize</a>
-        <a href="translation.html">Translator</a>
-        <a href="todo.html">Tasks Monitor</a>
-        <a href="scientific.html">ScienceCalc</a>
-        <a href="eq.html">Equation Solver</a>
-        <a href="gpa.html">GPA Calculator</a>
-        <a href="mail.html">Feedback</a>
-    </div>
-
-    <span id="menuButton" class="openbtn" onclick="openNav()">&#9776;</span>
 
     <div class="container">
         <h1 class="animated">Welcome to PedNexus</h1>
-        <a href="qrcode.html" class="button">QR Generator</a>
-        <a href="studentlogin.html" class="button">Student Login</a>
-        <a href="faclogin.html" class="button">Faculty Login</a>
+        <div class="mode-buttons">
+            <button class="mode-button">Smart Learning Mode</button>
+            <button class="mode-button">Audio Enriched Mode</button>
+            <button class="mode-button">Sign Express Mode</button>
+            <button class="mode-button">Language Flex Mode</button>
+            <button class="mode-button">Focus Friendly Mode</button>
+        </div>
     </div>
 
     <section id="about">
         <div class="container">
             <h2>About Us</h2>
-            <p>PedNexus is an innovative platform designed to enhance the educational experience through digital technologies. Our goal is to provide a comprehensive and effective learning environment that supports students and educators in their pursuit of knowledge.</p>
-        </div>
-    </section>
-
-    <section id="features">
-        <div class="container">
-            <h2>Features</h2>
-            <p>Our platform offers a range of features to support modern education:</p>
-            <div class="row">
-                <div class="col-md-6">
-                    <ul>
-                        <li>Recording (video, audio)</li>
-                        <li>Uploading (partial)</li>
-                        <li>Scanning camera</li>
-                        <li>Specific Lighting</li>
-                        <li>Integration with smart board</li>
-                        <li>Accessing (partial)</li>
-                    </ul>
-                </div>
-                <div class="col-md-6">
-                    <ul>
-                        <li>Doubt clearing method</li>
-                        <li>VR</li>
-                        <li>Transcripts - materials</li>
-                        <li>Autosuggestions</li>
-                        <li>Adding Practical clips</li>
-                        <li>Personal Learning AI</li>
-                    </ul>
-                </div>
-                <div class="col-md-12">
-                    <ul>
-                        <li>Smart suggestion</li>
-                        <li>Q&A</li>
-                        <li>Adaptive assessment and progress tracking</li>
-                        <li>Collaborative learning space</li>
-                        <li>Smart notification and reminder</li>
-                        <li>Talent showcasing platform</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="status">
-        <div class="container">
-            <h2>Current Status</h2>
-            <p>We are continually working to improve our platform and integrate the latest technologies to enhance the learning experience. Stay tuned for updates and new features as we expand our offerings and refine our services.</p>
-        </div>
-    </section>
-
-    <section id="team">
-        <div class="container">
-            <h2>Meet Our Team</h2>
-            <div class="row justify-content-center">
-                <div class="col-md-4">
-                    <div class="flip-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front" style="background-color: #004d40;">
-                                Mentor
-                            </div>
-                            <div class="flip-card-back">
-                                <h3>Dr.T.Prathiba</h3>
-                                <p>Mentor - Expert in Video Processing</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Other team members -->
-                <div class="col-md-4 d-none d-md-block"></div>
-                <div class="col-md-4">
-                    <div class="flip-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                Member 1
-                            </div>
-                            <div class="flip-card-back">
-                                <h3>C. Ariswaran</h3>
-                                <p>22UEC048</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="flip-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                Member 2
-                            </div>
-                            <div class="flip-card-back">
-                                <h3>S. Ramachandra Boopathi</h3>
-                                <p>22UEC046</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="flip-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                Member 3
-                            </div>
-                            <div class="flip-card-back">
-                                <h3>S. Vimalraj</h3>
-                                <p>22UEC049</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="flip-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                Member 4
-                            </div>
-                            <div class="flip-card-back">
-                                <h3>A. Swetha</h3>
-                                <p>22UEC020</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="flip-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                Member 5
-                            </div>
-                            <div class="flip-card-back">
-                                <h3>S.Hemasri</h3>
-                                <p>22UEC006</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="flip-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                Member 6
-                            </div>
-                            <div class="flip-card-back">
-                                <h3>A.Atchaya Karthika</h3>
-                                <p>22UEC021</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <p>A platform where learning bends, blossoms, and blooms for every kind of mind. We believe that education is not a privilege, but a birthright, regardless of one's language, ability, or background. Our mission is to deliver equal knowledge in uniquely tailored ways, embracing learners who see with their ears, hear with their hands, and feel with their hearts. With adaptive paths for the visually impaired, hearing and speech challenged, cognitive learners, multilingual minds, and general learners—we ensure no one is left behind. From sign-language lessons to audio-based content, from visual simplicity to grammar tools and quizzes, we craft a learning world where every click is a step toward inclusion.
+                Because here, learning doesn't just happen but it happens your way.<p>
         </div>
     </section>
 
@@ -402,16 +150,5 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="script1.js"></script>
-    <script>
-        function openNav() {
-            document.getElementById("mySidenav").style.width = "250px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidenav").style.width = "0";
-        }
-    </script>
 </body>
 </html>
-
