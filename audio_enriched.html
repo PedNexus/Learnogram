@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diode - Audio Enriched Mode</title>
+  <title>Diode - Multilingual Audio Guide</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
     body {
@@ -28,7 +28,6 @@
       border: none;
       padding: 10px 20px;
       border-radius: 6px;
-      margin-top: 20px;
       transition: background-color 0.3s;
     }
     .back-btn:hover {
@@ -37,32 +36,59 @@
     ul {
       padding-left: 20px;
     }
-    .play-btn {
+    .audio-btn {
       background-color: #2e7d32;
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 8px 15px;
       border-radius: 6px;
-      margin-bottom: 20px;
       cursor: pointer;
       transition: background-color 0.3s;
       display: flex;
       align-items: center;
+      margin-right: 5px;
     }
-    .play-btn:hover {
+    .audio-btn:hover {
       background-color: #1b5e20;
     }
-    .play-btn i {
-      margin-right: 8px;
+    .audio-btn i {
+      margin-right: 5px;
     }
     .btn-container {
       display: flex;
       justify-content: space-between;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
     .audio-controls {
       display: flex;
-      gap: 10px;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .language-selector {
+      margin-bottom: 15px;
+    }
+    .lang-btn {
+      background-color: #e0e0e0;
+      color: #333;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      margin-right: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .lang-btn:hover, .lang-btn.active {
+      background-color: #2e7d32;
+      color: white;
+    }
+    .tamil-text {
+      font-family: 'Latha', 'Vijaya', 'Tamil MN', sans-serif;
+      font-size: 1.1em;
+      line-height: 1.6;
+    }
+    .hindi-text {
+      font-family: 'Nirmala UI', 'Mangal', 'Arial Unicode MS', sans-serif;
     }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -70,143 +96,204 @@
 <body>
 
   <div class="content">
+    <div class="language-selector">
+      <button class="lang-btn active" data-lang="en">English</button>
+      <button class="lang-btn" data-lang="ta">தமிழ் (Tamil)</button>
+      <button class="lang-btn" data-lang="hi">हिन्दी (Hindi)</button>
+      <button class="lang-btn" data-lang="es">Español (Spanish)</button>
+      <button class="lang-btn" data-lang="fr">Français (French)</button>
+    </div>
+
     <div class="btn-container">
       <div class="audio-controls">
-        <button id="playBtn" class="play-btn">
+        <button id="playBtn" class="audio-btn">
           <i class="fas fa-play"></i> Play
         </button>
-        <button id="pauseBtn" class="play-btn" disabled>
+        <button id="pauseBtn" class="audio-btn" disabled>
           <i class="fas fa-pause"></i> Pause
         </button>
-        <button id="resumeBtn" class="play-btn" disabled>
+        <button id="resumeBtn" class="audio-btn" disabled>
           <i class="fas fa-play"></i> Resume
         </button>
-        <button id="stopBtn" class="play-btn" disabled>
+        <button id="stopBtn" class="audio-btn" disabled>
           <i class="fas fa-stop"></i> Stop
         </button>
       </div>
       <a href="index.html" class="back-btn">⬅ Back to Home</a>
     </div>
     
-    <h1>What is a Diode?</h1>
-    <p>A diode is a semiconductor device that allows current to flow in only one direction. It acts like a one-way street for electrical current. Diodes are crucial components in electronics, used for rectifying signals, protecting circuits, and more.</p>
+    <div id="content-en">
+      <h1>What is a Diode?</h1>
+      <p>A diode is a semiconductor device that allows current to flow in only one direction. It acts like a one-way street for electrical current. Diodes are crucial components in electronics, used for rectifying signals, protecting circuits, and more.</p>
 
-    <h2>Types of Diodes</h2>
-    <ul>
-      <li><strong>1. PN Junction Diode:</strong> The most common type. Allows current only in forward bias.</li>
-      <li><strong>2. Zener Diode:</strong> Designed to allow current in reverse bias once a specific voltage is reached. Used in voltage regulation.</li>
-      <li><strong>3. Light Emitting Diode (LED):</strong> Emits light when forward biased. Used in displays and lighting.</li>
-      <li><strong>4. Schottky Diode:</strong> Known for fast switching and low voltage drop. Used in high-speed circuits.</li>
-      <li><strong>5. Photodiode:</strong> Converts light into current. Used in solar cells and light sensors.</li>
-      <li><strong>6. Tunnel Diode:</strong> Has negative resistance properties. Used in oscillators and amplifiers.</li>
-      <li><strong>7. Varactor Diode:</strong> Acts as a variable capacitor when reverse biased. Used in tuning circuits.</li>
-    </ul>
+      <h2>Types of Diodes</h2>
+      <ul>
+        <li><strong>1. PN Junction Diode:</strong> The most common type. Allows current only in forward bias.</li>
+        <li><strong>2. Zener Diode:</strong> Designed to allow current in reverse bias once a specific voltage is reached. Used in voltage regulation.</li>
+        <li><strong>3. Light Emitting Diode (LED):</strong> Emits light when forward biased. Used in displays and lighting.</li>
+        <li><strong>4. Schottky Diode:</strong> Known for fast switching and low voltage drop. Used in high-speed circuits.</li>
+        <li><strong>5. Photodiode:</strong> Converts light into current. Used in solar cells and light sensors.</li>
+        <li><strong>6. Tunnel Diode:</strong> Has negative resistance properties. Used in oscillators and amplifiers.</li>
+        <li><strong>7. Varactor Diode:</strong> Acts as a variable capacitor when reverse biased. Used in tuning circuits.</li>
+      </ul>
 
-    <p>Diodes play an essential role in modern electronics by managing how current flows and protecting sensitive components from damage.</p>
+      <p>Diodes play an essential role in modern electronics by managing how current flows and protecting sensitive components from damage.</p>
+    </div>
+
+    <div id="content-ta" class="tamil-text" style="display:none;">
+      <h1>டையோடு என்றால் என்ன?</h1>
+      <p>ஒரு டையோடு என்பது மின்னோட்டம் ஒரு திசையில் மட்டுமே பாய அனுமதிக்கும் ஒரு குறைக்கடத்தி சாதனமாகும். இது மின்சார மின்னோட்டத்திற்கான ஒரு வழி தெரு போல செயல்படுகிறது. டையோடுகள் மின்னணுவியலில் முக்கியமான கூறுகளாகும், சிக்னல்களை சீராக்குவதற்கும், சுற்றுகளைப் பாதுகாப்பதற்கும் பயன்படுகின்றன.</p>
+
+      <h2>டையோடுகளின் வகைகள்</h2>
+      <ul>
+        <li><strong>1. PN சந்தி டையோடு:</strong> மிகவும் பொதுவான வகை. முன்னோக்கி சார்பில் மட்டுமே மின்னோட்டத்தை அனுமதிக்கிறது.</li>
+        <li><strong>2. ஜீனர் டையோடு:</strong> ஒரு குறிப்பிட்ட மின்னழுத்தம் அடையும்போது தலைகீழ் சார்பில் மின்னோட்டத்தை அனுமதிக்க வடிவமைக்கப்பட்டுள்ளது. மின்னழுத்த ஒழுங்குமுறையில் பயன்படுத்தப்படுகிறது.</li>
+        <li><strong>3. ஒளி உமிழ் டையோடு (LED):</strong> முன்னோக்கி சார்பில் ஒளியை வெளியிடுகிறது. காட்சிகள் மற்றும் விளக்குகளில் பயன்படுத்தப்படுகிறது.</li>
+        <li><strong>4. ஸ்காட்கி டையோடு:</strong> வேகமான ஸ்விட்சிங் மற்றும் குறைந்த மின்னழுத்த வீழ்ச்சிக்கு பெயர் பெற்றது. அதிவேக சுற்றுகளில் பயன்படுத்தப்படுகிறது.</li>
+        <li><strong>5. ஒளிமின்னியல் டையோடு:</strong> ஒளியை மின்னோட்டமாக மாற்றுகிறது. சூரிய மின்கலங்கள் மற்றும் ஒளி உணரிகளில் பயன்படுத்தப்படுகிறது.</li>
+        <li><strong>6. சுரங்கப்பாதை டையோடு:</strong> எதிர்மறை எதிர்ப்பு பண்புகளைக் கொண்டுள்ளது. அலைவுகள் மற்றும் பெருக்கிகளில் பயன்படுத்தப்படுகிறது.</li>
+        <li><strong>7. மாறுதிறன் டையோடு:</strong> தலைகீழ் சார்பில் ஒரு மாறி கொண்மியாக செயல்படுகிறது. டியூனிங் சுற்றுகளில் பயன்படுத்தப்படுகிறது.</li>
+      </ul>
+
+      <p>டையோடுகள் மின்னோட்டம் எவ்வாறு பாய்கிறது என்பதை நிர்வகிப்பதன் மூலமும், உணர்திறன் கூறுகளை சேதத்திலிருந்து பாதுகாப்பதன் மூலமும் நவீன மின்னணுவியலில் ஒரு அத்தியாவசிய பங்கை வகிக்கின்றன.</p>
+    </div>
+
+    <div id="content-hi" class="hindi-text" style="display:none;">
+      <h1>डायोड क्या है?</h1>
+      <p>एक डायोड एक अर्धचालक उपकरण है जो करंट को केवल एक दिशा में प्रवाहित होने देता है। यह विद्युत प्रवाह के लिए एक तरफा सड़क की तरह काम करता है। डायोड इलेक्ट्रॉनिक्स में महत्वपूर्ण घटक हैं, जिनका उपयोग सिग्नल को रेक्टिफाई करने, सर्किट की सुरक्षा करने और अन्य कार्यों के लिए किया जाता है।</p>
+
+      <h2>डायोड के प्रकार</h2>
+      <ul>
+        <li><strong>1. PN जंक्शन डायोड:</strong> सबसे आम प्रकार। केवल फॉरवर्ड बायस में करंट प्रवाहित होने देता है।</li>
+        <li><strong>2. जेनर डायोड:</strong> एक विशिष्ट वोल्टेज तक पहुँचने पर रिवर्स बायस में करंट प्रवाहित होने देता है। वोल्टेज रेगुलेशन में उपयोग किया जाता है।</li>
+        <li><strong>3. लाइट एमिटिंग डायोड (LED):</strong> फॉरवर्ड बायस में प्रकाश उत्सर्जित करता है। डिस्प्ले और लाइटिंग में उपयोग किया जाता है।</li>
+        <li><strong>4. शॉट्की डायोड:</strong> तेज स्विचिंग और कम वोल्टेज ड्रॉप के लिए जाना जाता है। हाई-स्पीड सर्किट में उपयोग किया जाता है।</li>
+        <li><strong>5. फोटोडायोड:</strong> प्रकाश को करंट में परिवर्तित करता है। सोलर सेल और लाइट सेंसर में उपयोग किया जाता है।</li>
+        <li><strong>6. टनल डायोड:</strong> नेगेटिव रेजिस्टेंस गुण होते हैं। ऑसिलेटर और एम्पलीफायर में उपयोग किया जाता है।</li>
+        <li><strong>7. वैराक्टर डायोड:</strong> रिवर्स बायस में वेरिएबल कैपेसिटर की तरह काम करता है। ट्यूनिंग सर्किट में उपयोग किया जाता है।</li>
+      </ul>
+
+      <p>डायोड आधुनिक इलेक्ट्रॉनिक्स में एक आவश्यक भूमिका நிர்வகிக்கின்றன, करंट के प्रवाह को नियंत्रित करके और संवेदनशील घटकों को नुकसान से बचाकर।</p>
+    </div>
+
+    <div id="content-es" style="display:none;">
+      <h1>¿Qué es un diodo?</h1>
+      <p>Un diodo es un dispositivo semiconductor que permite que la corriente fluya en una sola dirección. Actúa como una calle de un solo sentido para la corriente eléctrica. Los diodos son componentes cruciales en electrónica, utilizados para rectificar señales, proteger circuitos y más.</p>
+
+      <h2>Tipos de diodos</h2>
+      <ul>
+        <li><strong>1. Diodo de unión PN:</strong> El tipo más común. Permite la corriente solo en polarización directa.</li>
+        <li><strong>2. Diodo Zener:</strong> Diseñado para permitir corriente en polarización inversa una vez que se alcanza un voltaje específico. Se utiliza en regulación de voltaje.</li>
+        <li><strong>3. Diodo emisor de luz (LED):</strong> Emite luz cuando está polarizado directamente. Se utiliza en pantallas e iluminación.</li>
+        <li><strong>4. Diodo Schottky:</strong> Conocido por su conmutación rápida y baja caída de voltaje. Se utiliza en circuitos de alta velocidad.</li>
+        <li><strong>5. Fotodiodo:</strong> Convierte la luz en corriente. Se utiliza en células solares y sensores de luz.</li>
+        <li><strong>6. Diodo túnel:</strong> Tiene propiedades de resistencia negativa. Se utiliza en osciladores y amplificadores.</li>
+        <li><strong>7. Diodo varactor:</strong> Actúa como un capacitor variable cuando está polarizado inversamente. Se utiliza en circuitos de sintonía.</li>
+      </ul>
+
+      <p>Los diodos desempeñan un papel esencial en la electrónica moderna al gestionar el flujo de corriente y proteger componentes sensibles de daños.</p>
+    </div>
+
+    <div id="content-fr" style="display:none;">
+      <h1>Qu'est-ce qu'une diode ?</h1>
+      <p>Une diode est un dispositif semi-conducteur qui permet au courant de circuler dans une seule direction. Elle agit comme une rue à sens unique pour le courant électrique. Les diodes sont des composants cruciaux en électronique, utilisés pour redresser des signaux, protéger des circuits et plus encore.</p>
+
+      <h2>Types de diodes</h2>
+      <ul>
+        <li><strong>1. Diode à jonction PN:</strong> Le type le plus courant. Permet le courant uniquement en polarisation directe.</li>
+        <li><strong>2. Diode Zener:</strong> Conçue pour permettre le courant en polarisation inverse une fois qu'une tension spécifique est atteinte. Utilisée dans la régulation de tension.</li>
+        <li><strong>3. Diode électroluminescente (LED):</strong> Émet de la lumière lorsqu'elle est polarisée directement. Utilisée dans les affichages et l'éclairage.</li>
+        <li><strong>4. Diode Schottky:</strong> Connue pour sa commutation rapide et sa faible chute de tension. Utilisée dans les circuits haute vitesse.</li>
+        <li><strong>5. Photodiode:</strong> Convertit la lumière en courant. Utilisée dans les cellules solaires et les capteurs de lumière.</li>
+        <li><strong>6. Diode tunnel:</strong> Possède des propriétés de résistance négative. Utilisée dans les oscillateurs et amplificateurs.</li>
+        <li><strong>7. Diode varicap:</strong> Agit comme un condensateur variable lorsqu'elle est polarisée en inverse. Utilisée dans les circuits d'accord.</li>
+      </ul>
+
+      <p>Les diodes jouent un rôle essentiel dans l'électronique moderne en gérant le flux de courant et en protégeant les composants sensibles contre les dommages.</p>
+    </div>
   </div>
 
+  
   <script>
-    // Global variables to track speech state
-    let utterance = null;
-    let isPlaying = false;
-    let isPaused = false;
-    
-    // Get all buttons
-    const playBtn = document.getElementById('playBtn');
-    const pauseBtn = document.getElementById('pauseBtn');
-    const resumeBtn = document.getElementById('resumeBtn');
-    const stopBtn = document.getElementById('stopBtn');
-    
-    // Initialize speech synthesis
     const synth = window.speechSynthesis;
-    
-    // Play button functionality
-    playBtn.addEventListener('click', function() {
-      // If already playing, do nothing
-      if (isPlaying && !isPaused) return;
-      
-      // Get all the text content from the page
-      const content = document.querySelector('.content');
-      const textToRead = content.innerText
-        .replace('Play', '')
-        .replace('Pause', '')
-        .replace('Resume', '')
-        .replace('Stop', '')
-        .replace('⬅ Back to Home', '');
-      
-      // Create a new utterance if none exists or if we're starting fresh
-      if (!utterance || !isPaused) {
-        utterance = new SpeechSynthesisUtterance();
-        utterance.text = textToRead;
-        utterance.rate = 1; // Speed (0.1 to 10)
-        utterance.pitch = 1; // Pitch (0 to 2)
-        utterance.volume = 1; // Volume (0 to 1)
-        
-        // Event handlers
-        utterance.onend = function() {
-          resetButtons();
-        };
-        
-        utterance.onerror = function() {
-          resetButtons();
-        };
-      }
-      
-      // Start or resume speech
-      if (isPaused) {
-        synth.resume();
-      } else {
-        synth.speak(utterance);
-      }
-      
-      // Update button states
-      isPlaying = true;
-      isPaused = false;
-      updateButtonStates();
+    let currentUtterance = null;
+    let selectedLang = 'en';
+  
+    const texts = {
+      en: document.getElementById('content-en').innerText,
+      ta: document.getElementById('content-ta').innerText,
+      hi: document.getElementById('content-hi').innerText
+    };
+  
+    const langVoices = {
+      en: 'en-US',
+      ta: 'ta-IN',
+      hi: 'hi-IN',
+      es: 'es-ES',
+      fr: 'fr-FR'
+    };
+  
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedLang = btn.getAttribute('data-lang');
+  
+        // Hide and show content
+        for (const lang in texts) {
+          document.getElementById(`content-${lang}`).style.display = (lang === selectedLang) ? 'block' : 'none';
+        }
+  
+        stopSpeech(); // Stop any ongoing speech
+      });
     });
-    
-    // Pause button functionality
-    pauseBtn.addEventListener('click', function() {
-      if (isPlaying && !isPaused) {
+  
+    function playSpeech() {
+      if (synth.speaking) {
+        synth.cancel();
+      }
+  
+      const textToSpeak = texts[selectedLang];
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.lang = langVoices[selectedLang] || 'en-US';
+      utterance.rate = 1;
+      currentUtterance = utterance;
+  
+      synth.speak(utterance);
+      toggleAudioControls(true);
+    }
+  
+    function pauseSpeech() {
+      if (synth.speaking && !synth.paused) {
         synth.pause();
-        isPaused = true;
-        updateButtonStates();
       }
-    });
-    
-    // Resume button functionality
-    resumeBtn.addEventListener('click', function() {
-      if (isPlaying && isPaused) {
+    }
+  
+    function resumeSpeech() {
+      if (synth.paused) {
         synth.resume();
-        isPaused = false;
-        updateButtonStates();
       }
-    });
-    
-    // Stop button functionality
-    stopBtn.addEventListener('click', function() {
-      synth.cancel();
-      resetButtons();
-    });
-    
-    // Function to update button states
-    function updateButtonStates() {
-      playBtn.disabled = isPlaying && !isPaused;
-      pauseBtn.disabled = !isPlaying || isPaused;
-      resumeBtn.disabled = !isPlaying || !isPaused;
-      stopBtn.disabled = !isPlaying;
     }
-    
-    // Function to reset all buttons to initial state
-    function resetButtons() {
-      isPlaying = false;
-      isPaused = false;
-      playBtn.disabled = false;
-      pauseBtn.disabled = true;
-      resumeBtn.disabled = true;
-      stopBtn.disabled = true;
+  
+    function stopSpeech() {
+      if (synth.speaking) {
+        synth.cancel();
+      }
+      toggleAudioControls(false);
     }
+  
+    function toggleAudioControls(active) {
+      document.getElementById('pauseBtn').disabled = !active;
+      document.getElementById('resumeBtn').disabled = !active;
+      document.getElementById('stopBtn').disabled = !active;
+    }
+  
+    document.getElementById('playBtn').addEventListener('click', playSpeech);
+    document.getElementById('pauseBtn').addEventListener('click', pauseSpeech);
+    document.getElementById('resumeBtn').addEventListener('click', resumeSpeech);
+    document.getElementById('stopBtn').addEventListener('click', stopSpeech);
   </script>
+  
 
 </body>
 </html>
