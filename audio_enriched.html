@@ -37,11 +37,57 @@
     ul {
       padding-left: 20px;
     }
+    .play-btn {
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      display: flex;
+      align-items: center;
+    }
+    .play-btn:hover {
+      background-color: #1b5e20;
+    }
+    .play-btn i {
+      margin-right: 8px;
+    }
+    .btn-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .audio-controls {
+      display: flex;
+      gap: 10px;
+    }
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
 
   <div class="content">
+    <div class="btn-container">
+      <div class="audio-controls">
+        <button id="playBtn" class="play-btn">
+          <i class="fas fa-play"></i> Play
+        </button>
+        <button id="pauseBtn" class="play-btn" disabled>
+          <i class="fas fa-pause"></i> Pause
+        </button>
+        <button id="resumeBtn" class="play-btn" disabled>
+          <i class="fas fa-play"></i> Resume
+        </button>
+        <button id="stopBtn" class="play-btn" disabled>
+          <i class="fas fa-stop"></i> Stop
+        </button>
+      </div>
+      <a href="index.html" class="back-btn">⬅ Back to Home</a>
+    </div>
+    
     <h1>What is a Diode?</h1>
     <p>A diode is a semiconductor device that allows current to flow in only one direction. It acts like a one-way street for electrical current. Diodes are crucial components in electronics, used for rectifying signals, protecting circuits, and more.</p>
 
@@ -57,9 +103,110 @@
     </ul>
 
     <p>Diodes play an essential role in modern electronics by managing how current flows and protecting sensitive components from damage.</p>
-
-    <a href="index.html" class="back-btn">⬅ Back to Home</a>
   </div>
+
+  <script>
+    // Global variables to track speech state
+    let utterance = null;
+    let isPlaying = false;
+    let isPaused = false;
+    
+    // Get all buttons
+    const playBtn = document.getElementById('playBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resumeBtn = document.getElementById('resumeBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    
+    // Initialize speech synthesis
+    const synth = window.speechSynthesis;
+    
+    // Play button functionality
+    playBtn.addEventListener('click', function() {
+      // If already playing, do nothing
+      if (isPlaying && !isPaused) return;
+      
+      // Get all the text content from the page
+      const content = document.querySelector('.content');
+      const textToRead = content.innerText
+        .replace('Play', '')
+        .replace('Pause', '')
+        .replace('Resume', '')
+        .replace('Stop', '')
+        .replace('⬅ Back to Home', '');
+      
+      // Create a new utterance if none exists or if we're starting fresh
+      if (!utterance || !isPaused) {
+        utterance = new SpeechSynthesisUtterance();
+        utterance.text = textToRead;
+        utterance.rate = 1; // Speed (0.1 to 10)
+        utterance.pitch = 1; // Pitch (0 to 2)
+        utterance.volume = 1; // Volume (0 to 1)
+        
+        // Event handlers
+        utterance.onend = function() {
+          resetButtons();
+        };
+        
+        utterance.onerror = function() {
+          resetButtons();
+        };
+      }
+      
+      // Start or resume speech
+      if (isPaused) {
+        synth.resume();
+      } else {
+        synth.speak(utterance);
+      }
+      
+      // Update button states
+      isPlaying = true;
+      isPaused = false;
+      updateButtonStates();
+    });
+    
+    // Pause button functionality
+    pauseBtn.addEventListener('click', function() {
+      if (isPlaying && !isPaused) {
+        synth.pause();
+        isPaused = true;
+        updateButtonStates();
+      }
+    });
+    
+    // Resume button functionality
+    resumeBtn.addEventListener('click', function() {
+      if (isPlaying && isPaused) {
+        synth.resume();
+        isPaused = false;
+        updateButtonStates();
+      }
+    });
+    
+    // Stop button functionality
+    stopBtn.addEventListener('click', function() {
+      synth.cancel();
+      resetButtons();
+    });
+    
+    // Function to update button states
+    function updateButtonStates() {
+      playBtn.disabled = isPlaying && !isPaused;
+      pauseBtn.disabled = !isPlaying || isPaused;
+      resumeBtn.disabled = !isPlaying || !isPaused;
+      stopBtn.disabled = !isPlaying;
+    }
+    
+    // Function to reset all buttons to initial state
+    function resetButtons() {
+      isPlaying = false;
+      isPaused = false;
+      playBtn.disabled = false;
+      pauseBtn.disabled = true;
+      resumeBtn.disabled = true;
+      stopBtn.disabled = true;
+    }
+  </script>
 
 </body>
 </html>
