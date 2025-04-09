@@ -47,6 +47,7 @@
       display: flex;
       align-items: center;
       margin-right: 5px;
+      margin-top: 5px;
     }
     .audio-btn:hover {
       background-color: #1b5e20;
@@ -78,17 +79,14 @@
   <div class="content">
     <div class="btn-container">
       <div class="audio-controls">
-        <button id="playBtn" class="audio-btn">
-          <i class="fas fa-play"></i> Play
-        </button>
         <button id="pauseBtn" class="audio-btn" disabled>
-          <i class="fas fa-pause"></i> Pause
-        </button>
-        <button id="resumeBtn" class="audio-btn" disabled>
-          <i class="fas fa-play"></i> Resume
+          <i class="fas fa-pause"></i> Pause/Resume
         </button>
         <button id="stopBtn" class="audio-btn" disabled>
           <i class="fas fa-stop"></i> Stop
+        </button>
+        <button id="speakBtn" class="audio-btn">
+          <i class="fas fa-volume-up"></i> Read Aloud
         </button>
       </div>
       <a href="index.html" class="back-btn">⬅ Back to Home</a>
@@ -130,13 +128,18 @@
   <script>
     const langSelect = document.getElementById('languageSelector');
     const contentDiv = document.getElementById('content-en');
+    const speakBtn = document.getElementById("speakBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const stopBtn = document.getElementById("stopBtn");
+
+    let utterance;
 
     langSelect.addEventListener('change', async () => {
       const selectedLang = langSelect.value;
       const originalText = contentDiv.innerText;
 
       if (!selectedLang || selectedLang === "en") {
-        location.reload(); // reload to original
+        location.reload();
         return;
       }
 
@@ -149,7 +152,6 @@
         const translatedText = data[0].map(item => item[0]).join('');
         const paragraphs = translatedText.split('\n').filter(p => p.trim() !== '');
 
-        // Rebuild content while keeping original structure
         let translatedHTML = '';
         let tags = Array.from(contentDiv.children);
         let paraIndex = 0;
@@ -162,7 +164,7 @@
           } else if (tag.tagName === 'UL') {
             const liElements = tag.querySelectorAll('li');
             translatedHTML += '<ul>';
-            liElements.forEach(li => {
+            liElements.forEach(() => {
               translatedHTML += `<li>${paragraphs[paraIndex++] || ''}</li>`;
             });
             translatedHTML += '</ul>';
@@ -175,6 +177,68 @@
         alert('Translation failed. Please try again later.');
       }
     });
+
+    function speakText(text, langCode) {
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel(); // stop any current speech
+      }
+
+      utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = langCode;
+
+      const voices = speechSynthesis.getVoices();
+      let selectedVoice = voices.find(voice => voice.lang === langCode) ||
+                          voices.find(voice => voice.lang.startsWith(langCode)) ||
+                          voices[0];
+
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      }
+
+      pauseBtn.disabled = false;
+      stopBtn.disabled = false;
+
+      speechSynthesis.speak(utterance);
+    }
+
+    speakBtn.addEventListener("click", () => {
+      const lang = langSelect.value || "ta";
+      const text = contentDiv.innerText;
+      speakText(text, lang);
+    });
+
+    pauseBtn.addEventListener("click", () => {
+  if (speechSynthesis.speaking) {
+    if (speechSynthesis.paused) {
+      console.log("Resuming...");
+      speechSynthesis.resume();  // 🔁 this resumes from paused point
+    } else {
+      console.log("Pausing...");
+      speechSynthesis.pause();   // ⏸ this pauses it
+    }
+  }
+});
+
+
+    stopBtn.addEventListener("click", () => {
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+        pauseBtn.disabled = true;
+        stopBtn.disabled = true;
+      }
+    });
+
+    // Keyboard Shortcuts
+    document.addEventListener("keydown", (e) => {
+      const key = e.key.toLowerCase();
+      if (key === "r") speakBtn.click();
+      else if (key === "p") pauseBtn.click();
+      else if (key === "s") stopBtn.click();
+    });
+
+    window.speechSynthesis.onvoiceschanged = () => {
+      console.log("Voices loaded.");
+    };
   </script>
 
 </body>
