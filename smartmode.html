@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Learning Mode - PedNexus</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00796b;
+            --secondary-color: #0056b3;
+            --sidebar-width: 300px;
+            --sidebar-collapsed-width: 70px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            transition: margin-left 0.3s;
+        }
+        
+        /* Sidebar styles */
+        .sidebar {
+            height: 100vh;
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #2c3e50;
+            color: white;
+            overflow-x: hidden;
+            transition: 0.3s;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background-color: #1a252f;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-header h3 {
+            margin: 0;
+            white-space: nowrap;
+        }
+        
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            padding: 15px 20px;
+            border-bottom: 1px solid #34495e;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar-menu li:hover {
+            background-color: #34495e;
+        }
+        
+        .sidebar-menu li.active {
+            background-color: var(--primary-color);
+        }
+        
+        .sidebar-menu li i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+            min-width: 25px;
+        }
+        
+        .sidebar-menu li span {
+            white-space: nowrap;
+        }
+        
+        .sidebar.collapsed .sidebar-menu li span {
+            display: none;
+        }
+        
+        .sidebar.collapsed .sidebar-menu li {
+            justify-content: center;
+        }
+        
+        .sidebar.collapsed .sidebar-menu li i {
+            margin-right: 0;
+            font-size: 1.5rem;
+        }
+        
+        /* Main content area */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+        
+        .sidebar.collapsed ~ .main-content {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+        
+        /* Learning content styles */
+        .learning-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .concept-title {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        
+        .concept-visualization {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+            margin: 30px 0;
+        }
+        
+        .diode-image {
+            max-width: 300px;
+            margin: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .diode-image:hover {
+            transform: scale(1.05);
+        }
+        
+        .diode-explanation {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin: 10px;
+        }
+        
+        /* Tool containers */
+        .tool-container {
+            display: none;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .tool-container.active {
+            display: block;
+        }
+        
+        .tool-title {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        /* Updated Grammar Checker Styles */
+        .grammar-input {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            resize: vertical;
+        }
+        
+        .grammar-result {
+            min-height: 100px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        
+        .grammar-error {
+            color: #d32f2f;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        /* Updated Summarizer Styles */
+        .summarizer-input {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            resize: vertical;
+        }
+        
+        .summarizer-options {
+            margin-bottom: 15px;
+        }
+        
+        .summary-stats {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+        
+        /* To-Do List Styles */
+        .todo-input-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .todo-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            font-size: 16px;
+        }
+        
+        .add-todo-btn {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        
+        .todo-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+        }
+        
+        .todo-item.completed {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+        
+        .todo-actions button {
+            margin-left: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .complete-btn {
+            color: #28a745;
+        }
+        
+        .delete-btn {
+            color: #dc3545;
+        }
+        
+        /* Dictionary Styles */
+        .dictionary-result {
+            min-height: 150px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        
+        .word-definition {
+            margin-bottom: 15px;
+        }
+        
+        .word-type {
+            font-style: italic;
+            color: #666;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: var(--sidebar-collapsed-width);
+            }
+            
+            .sidebar .sidebar-menu li span {
+                display: none;
+            }
+            
+            .sidebar .sidebar-menu li {
+                justify-content: center;
+            }
+            
+            .sidebar .sidebar-menu li i {
+                margin-right: 0;
+                font-size: 1.5rem;
+            }
+            
+            .main-content {
+                margin-left: var(--sidebar-collapsed-width);
+            }
+            
+            .concept-visualization {
+                flex-direction: column;
+            }
+            
+            .diode-explanation {
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3 class="sidebar-title">Tools</h3>
+            <button class="toggle-btn" id="toggleSidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="active" data-target="learning-content">
+                <i class="fas fa-lightbulb"></i>
+                <span>Diode Concept</span>
+            </li>
+            <li data-target="grammar-checker">
+                <i class="fas fa-spell-check"></i>
+                <span>Grammar Checker</span>
+            </li>
+            <li data-target="summarizer">
+                <i class="fas fa-file-contract"></i>
+                <span>Summarizer</span>
+            </li>
+            <li data-target="todo-list">
+                <i class="fas fa-tasks"></i>
+                <span>To-Do List</span>
+            </li>
+            <li data-target="dictionary">
+                <i class="fas fa-book"></i>
+                <span>Dictionary</span>
+            </li>
+            <li data-target="calculator">
+                <i class="fas fa-calculator"></i>
+                <span>Calculator</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Diode Learning Content -->
+        <div class="learning-container tool-container active" id="learning-content">
+            <h2 class="concept-title">Understanding Diodes</h2>
+            
+            <div class="concept-visualization">
+                <div>
+                    <img src="https://www.electronics-tutorials.ws/wp-content/uploads/2018/05/diode-diode5.gif" alt="Diode Symbol and Operation" class="diode-image">
+                    <p class="text-center"><em>Diode symbol and current flow direction</em></p>
+                </div>
+                
+                <div class="diode-explanation">
+                    <h3>What is a Diode?</h3>
+                    <p>A diode is a semiconductor device that essentially acts as a one-way switch for current. It allows current to flow easily in one direction, but severely restricts current from flowing in the opposite direction.</p>
+                    
+                    <h3>How Diodes Work</h3>
+                    <p>Diodes are made from a combination of P-type and N-type semiconductor materials. This creates a PN junction with important electrical properties:</p>
+                    <ul>
+                        <li><strong>Forward Bias:</strong> When voltage is applied in the conducting direction, current flows easily.</li>
+                        <li><strong>Reverse Bias:</strong> When voltage is applied in the non-conducting direction, very little current flows.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="concept-visualization">
+                <div>
+                    <img src="https://www.electronics-tutorials.ws/wp-content/uploads/2013/09/diode-characteristic-curve.gif" alt="Diode Characteristic Curve" class="diode-image">
+                    <p class="text-center"><em>Diode voltage-current characteristic curve</em></p>
+                </div>
+                
+                <div class="diode-explanation">
+                    <h3>Diode Characteristics</h3>
+                    <p>The behavior of a diode can be represented by its I-V (current-voltage) characteristic curve:</p>
+                    <ul>
+                        <li><strong>Forward Voltage Drop:</strong> Silicon diodes require about 0.7V to start conducting.</li>
+                        <li><strong>Reverse Breakdown:</strong> If reverse voltage exceeds a threshold, the diode conducts in reverse.</li>
+                        <li><strong>Non-linear Device:</strong> Diodes don't follow Ohm's Law - their resistance changes with voltage.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="concept-visualization">
+                <div>
+                    <img src="https://www.electronics-tutorials.ws/wp-content/uploads/2018/05/diode-diode8.gif" alt="Diode Applications" class="diode-image">
+                    <p class="text-center"><em>Common diode applications</em></p>
+                </div>
+                
+                <div class="diode-explanation">
+                    <h3>Diode Applications</h3>
+                    <p>Diodes are used in many electronic circuits:</p>
+                    <ul>
+                        <li><strong>Rectification:</strong> Converting AC to DC power</li>
+                        <li><strong>Voltage Regulation:</strong> Zener diodes maintain constant voltage</li>
+                        <li><strong>Signal Demodulation:</strong> Extracting information from radio signals</li>
+                        <li><strong>Overvoltage Protection:</strong> Protecting circuits from voltage spikes</li>
+                        <li><strong>Light Emission:</strong> LEDs (Light Emitting Diodes) produce light</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Grammar Checker Tool -->
+        <div class="tool-container" id="grammar-checker">
+            <h2 class="tool-title">Grammar Checker</h2>
+            <textarea class="grammar-input" placeholder="Enter your text here to check for grammar mistakes..."></textarea>
+            <button class="btn btn-primary" id="check-grammar-btn">Check Grammar</button>
+            <div class="grammar-result mt-3" id="grammar-result">
+                <p class="text-muted">Your grammar suggestions will appear here...</p>
+            </div>
+        </div>
+        
+        <!-- Summarizer Tool -->
+        <div class="tool-container" id="summarizer">
+            <h2 class="tool-title">Text Summarizer</h2>
+            <textarea class="summarizer-input" placeholder="Enter the text you want to summarize..."></textarea>
+            <div class="summarizer-options">
+                <label for="summary-length">Summary Length:</label>
+                <select id="summary-length" class="form-control mb-3" style="width: 200px;">
+                    <option value="short">Short (25%)</option>
+                    <option value="medium" selected>Medium (50%)</option>
+                    <option value="long">Long (75%)</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" id="summarize-btn">Summarize</button>
+            <div class="grammar-result mt-3" id="summary-result">
+                <p class="text-muted">Your summary will appear here...</p>
+            </div>
+            <div class="summary-stats" id="summary-stats"></div>
+        </div>
+        
+        <!-- To-Do List Tool -->
+        <div class="tool-container" id="todo-list">
+            <h2 class="tool-title">To-Do List Maker</h2>
+            <div class="todo-input-container">
+                <input type="text" class="todo-input" placeholder="Add a new task...">
+                <button class="add-todo-btn" id="add-todo-btn">Add</button>
+            </div>
+            <ul class="todo-list" id="todo-list-items">
+                <!-- To-do items will be added here -->
+            </ul>
+        </div>
+        
+        <!-- Dictionary Tool -->
+        <div class="tool-container" id="dictionary">
+            <h2 class="tool-title">Dictionary</h2>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="dictionary-search" placeholder="Search for a word...">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" id="dictionary-search-btn">Search</button>
+                </div>
+            </div>
+            <div class="dictionary-result" id="dictionary-result">
+                <p class="text-muted">Word definitions will appear here...</p>
+            </div>
+        </div>
+        
+        <!-- Calculator Tool -->
+        <div class="tool-container" id="calculator">
+            <h2 class="tool-title">Calculator</h2>
+            <div class="calculator" style="max-width: 300px;">
+                <input type="text" class="form-control mb-2" id="calculator-display" readonly>
+                <div class="calculator-buttons">
+                    <div class="row mb-2">
+                        <div class="col"><button class="btn btn-secondary btn-block calc-btn" value="7">7</button></div>
+                        <div class="col"><button class="btn btn-secondary btn-block calc-btn" value="8">8</button></div>
+                        <div class="col"><button class="btn btn-secondary btn-block calc-btn" value="9">9</button></div>
+                        <div class="col"><button class="btn btn-warning btn-block calc-btn" value="/">÷</button></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col"><button class="btn btn-secondary btn-block calc-btn" value="4">4</button></div>
+                        <div class="col"><button class="btn btn-secondary btn-block calc-btn" value="5">5</button></div>
+                        <div class="col"><button class="btn btn-secondary btn-block calc-btn" value="6">6</button></div>
+                        <div class="col"><button class="btn btn-warning btn-block calc-btn" value="*">×</button></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col"><button class="btn btn-secondary btn-block calc-btn" value="1">1</button></div>
+                        <div class="col"><button class="btn btn-secondary btn-block calc-btn" value="2">2</button></div>
+                        <div class="col"><button class="btn btn-secondary btn-block calc-btn" value="3">3</button></div>
+                        <div class="col"><button class="btn btn-warning btn-block calc-btn" value="-">-</button></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col"><button class="btn btn-secondary btn-block calc-btn" value="0">0</button></div>
+                        <div class="col"><button class="btn btn-secondary btn-block calc-btn" value=".">.</button></div>
+                        <div class="col"><button class="btn btn-success btn-block" id="calc-equals">=</button></div>
+                        <div class="col"><button class="btn btn-warning btn-block calc-btn" value="+">+</button></div>
+                    </div>
+                    <div class="row">
+                        <div class="col"><button class="btn btn-danger btn-block" id="calc-clear">C</button></div>
+                        <div class="col"><button class="btn btn-danger btn-block" id="calc-backspace">⌫</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Sidebar toggle functionality
+            $('#toggleSidebar').click(function() {
+                $('.sidebar').toggleClass('collapsed');
+            });
+            
+            // Tool navigation
+            $('.sidebar-menu li').click(function() {
+                $('.sidebar-menu li').removeClass('active');
+                $(this).addClass('active');
+                
+                const target = $(this).attr('data-target');
+                $('.tool-container').removeClass('active');
+                $('#' + target).addClass('active');
+            });
+            
+            // Grammar Checker - Using LanguageTool API
+            $('#check-grammar-btn').click(function() {
+                const text = $('.grammar-input').val();
+                if (text.trim() === '') {
+                    $('#grammar-result').html('<p class="text-danger">Please enter some text to check.</p>');
+                    return;
+                }
+                
+                // Show loading message
+                $('#grammar-result').html('<p>Checking grammar...</p>');
+                
+                // Using LanguageTool API
+                const url = "https://api.languagetoolplus.com/v2/check";
+                const params = new URLSearchParams({
+                    text: text,
+                    language: "en-US"
+                });
+
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: params.toString()
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.matches && data.matches.length > 0) {
+                        let corrections = "<h5>Grammar Suggestions:</h5>";
+                        data.matches.forEach((match, index) => {
+                            corrections += `
+                                <div class="grammar-error">
+                                    <p><strong>${index + 1}. ${match.message}</strong></p>
+                                    <p>Suggested correction: ${match.replacements.map(r => r.value).join(", ")}</p>
+                                    <p>Context: "...${text.substring(Math.max(0, match.offset - 10), match.offset)}<strong>${text.substring(match.offset, match.offset + match.length)}</strong>${text.substring(match.offset + match.length, match.offset + match.length + 10)}..."</p>
+                                </div>
+                            `;
+                        });
+                        $('#grammar-result').html(corrections);
+                    } else {
+                        $('#grammar-result').html('<div class="alert alert-success">No grammar mistakes found!</div>');
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    // Fallback to simple grammar check if API fails
+                    $('#grammar-result').html(`
+                        <h5>Grammar Suggestions:</h5>
+                        <ul>
+                            <li>Consider changing "their" to "his or her" for gender neutrality.</li>
+                            <li>Possible comma needed after introductory phrase.</li>
+                            <li>Watch for passive voice in the second paragraph.</li>
+                        </ul>
+                        <div class="alert alert-info mt-3">
+                            <strong>Note:</strong> Using simulated results. For full functionality, check your internet connection.
+                        </div>
+                    `);
+                });
+            });
+            
+            // Text Summarizer - Improved version
+            $('#summarize-btn').click(function() {
+                const text = $('.summarizer-input').val();
+                if (text.trim() === '') {
+                    $('#summary-result').html('<p class="text-danger">Please enter some text to summarize.</p>');
+                    return;
+                }
+                
+                const length = $('#summary-length').val();
+                let summaryRatio = 0.5; // Default to medium (50%)
+                
+                if (length === 'short') summaryRatio = 0.25;
+                if (length === 'long') summaryRatio = 0.75;
+                
+                // Improved summarization algorithm
+                function summarizeText(text, ratio) {
+                    // Split text into sentences
+                    let sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+                    
+                    // Basic word frequency analysis
+                    let wordCounts = {};
+                    let words = text.toLowerCase().split(/\W+/).filter(word => word.length > 2);
+                    words.forEach(word => {
+                        wordCounts[word] = (wordCounts[word] || 0) + 1;
+                    });
+                    
+                    // Score sentences based on word frequency
+                    let sentenceScores = sentences.map(sentence => {
+                        let score = 0;
+                        let wordsInSentence = sentence.toLowerCase().split(/\W+/).filter(word => word.length > 2);
+                        wordsInSentence.forEach(word => {
+                            score += wordCounts[word] || 0;
+                        });
+                        return { sentence, score };
+                    });
+                    
+                    // Sort sentences by score
+                    sentenceScores.sort((a, b) => b.score - a.score);
+                    
+                    // Determine how many sentences to include
+                    const targetCount = Math.max(1, Math.floor(sentences.length * ratio));
+                    
+                    // Take the top sentences as the summary
+                    let summary = sentenceScores.slice(0, targetCount)
+                        .sort((a, b) => sentences.indexOf(a.sentence) - sentences.indexOf(b.sentence))
+                        .map(item => item.sentence.trim() + (item.sentence.trim().endsWith('.') ? '' : '.'))
+                        .join(' ');
+                    
+                    return summary;
+                }
+                
+                const summary = summarizeText(text, summaryRatio);
+                const originalWordCount = text.split(/\s+/).length;
+                const summaryWordCount = summary.split(/\s+/).length;
+                
+                $('#summary-result').html(`<strong>Summary:</strong> ${summary}`);
+                $('#summary-stats').html(`
+                    Original: ${originalWordCount} words | 
+                    Summary: ${summaryWordCount} words | 
+                    Reduced to ${Math.round((summaryWordCount / originalWordCount) * 100)}% of original
+                `);
+            });
+            
+            // To-Do List
+            let todos = JSON.parse(localStorage.getItem('todos')) || [];
+            
+            function renderTodos() {
+                $('#todo-list-items').empty();
+                todos.forEach((todo, index) => {
+                    const todoItem = $(`
+                        <li class="todo-item ${todo.completed ? 'completed' : ''}" data-index="${index}">
+                            <span>${todo.text}</span>
+                            <div class="todo-actions">
+                                <button class="complete-btn"><i class="fas fa-check"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                    `);
+                    $('#todo-list-items').append(todoItem);
+                });
+            }
+            
+            renderTodos();
+            
+            $('#add-todo-btn').click(function() {
+                const input = $('.todo-input');
+                const text = input.val().trim();
+                if (text !== '') {
+                    todos.push({ text, completed: false });
+                    localStorage.setItem('todos', JSON.stringify(todos));
+                    input.val('');
+                    renderTodos();
+                }
+            });
+            
+            $('.todo-input').keypress(function(e) {
+                if (e.which === 13) { // Enter key
+                    $('#add-todo-btn').click();
+                }
+            });
+            
+            $(document).on('click', '.complete-btn', function() {
+                const index = $(this).closest('.todo-item').data('index');
+                todos[index].completed = !todos[index].completed;
+                localStorage.setItem('todos', JSON.stringify(todos));
+                renderTodos();
+            });
+            
+            $(document).on('click', '.delete-btn', function() {
+                const index = $(this).closest('.todo-item').data('index');
+                todos.splice(index, 1);
+                localStorage.setItem('todos', JSON.stringify(todos));
+                renderTodos();
+            });
+            
+            // Dictionary - Using Free Dictionary API
+            $('#dictionary-search-btn').click(function() {
+                const word = $('#dictionary-search').val().trim();
+                if (word === '') {
+                    $('#dictionary-result').html('<p class="text-danger">Please enter a word to search.</p>');
+                    return;
+                }
+                
+                $('#dictionary-result').html('<p>Searching for definition...</p>');
+                
+                // Using Free Dictionary API
+                fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Word not found');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data && data[0] && data[0].meanings) {
+                            let definitions = `<h4>${word.charAt(0).toUpperCase() + word.slice(1)}</h4>`;
+                            
+                            data[0].meanings.forEach(meaning => {
+                                definitions += `<div class="word-definition">`;
+                                definitions += `<p class="word-type"><em>${meaning.partOfSpeech}</em></p>`;
+                                definitions += `<ul>`;
+                                
+                                meaning.definitions.slice(0, 3).forEach((def, i) => {
+                                    definitions += `<li>${def.definition}</li>`;
+                                    if (def.example) {
+                                        definitions += `<p class="text-muted"><small>Example: "${def.example}"</small></p>`;
+                                    }
+                                });
+                                
+                                definitions += `</ul></div>`;
+                            });
+                            
+                            if (data[0].phonetics && data[0].phonetics[0] && data[0].phonetics[0].text) {
+                                definitions += `<p>Pronunciation: ${data[0].phonetics[0].text}</p>`;
+                            }
+                            
+                            $('#dictionary-result').html(definitions);
+                        } else {
+                            $('#dictionary-result').html(`<p>No definitions found for "${word}".</p>`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        // Fallback to simple dictionary if API fails
+                        const definitions = {
+                            'diode': 'A semiconductor device with two terminals, typically allowing the flow of current in one direction only.',
+                            'current': 'A flow of electricity which results from the ordered directional movement of electrically charged particles.',
+                            'voltage': 'An electromotive force or potential difference expressed in volts.',
+                            'semiconductor': 'A solid substance that has a conductivity between that of an insulator and that of most metals.'
+                        };
+                        
+                        const definition = definitions[word.toLowerCase()] || `No definition found for "${word}". Try another word.`;
+                        
+                        $('#dictionary-result').html(`
+                            <h4>${word.charAt(0).toUpperCase() + word.slice(1)}</h4>
+                            <p>${definition}</p>
+                            <div class="alert alert-info mt-3">
+                                <strong>Note:</strong> Using simulated results. For full functionality, check your internet connection.
+                            </div>
+                        `);
+                    });
+            });
+            
+            $('#dictionary-search').keypress(function(e) {
+                if (e.which === 13) { // Enter key
+                    $('#dictionary-search-btn').click();
+                }
+            });
+            
+            // Calculator
+            let currentInput = '0';
+            let previousInput = '';
+            let operation = null;
+            let resetInput = false;
+            
+            function updateDisplay() {
+                $('#calculator-display').val(currentInput);
+            }
+            
+            $('.calc-btn').click(function() {
+                const value = $(this).val();
+                
+                if (resetInput) {
+                    currentInput = '0';
+                    resetInput = false;
+                }
+                
+                if (value === '.' && currentInput.includes('.')) return;
+                
+                if (currentInput === '0' && value !== '.') {
+                    currentInput = value;
+                } else {
+                    currentInput += value;
+                }
+                
+                updateDisplay();
+            });
+            
+            $('#calc-clear').click(function() {
+                currentInput = '0';
+                previousInput = '';
+                operation = null;
+                updateDisplay();
+            });
+            
+            $('#calc-backspace').click(function() {
+                if (currentInput.length === 1) {
+                    currentInput = '0';
+                } else {
+                    currentInput = currentInput.slice(0, -1);
+                }
+                updateDisplay();
+            });
+            
+            $('.calc-btn[value="+"], .calc-btn[value="-"], .calc-btn[value="*"], .calc-btn[value="/"]').click(function() {
+                if (operation !== null) calculate();
+                previousInput = currentInput;
+                operation = $(this).val();
+                resetInput = true;
+            });
+            
+            $('#calc-equals').click(function() {
+                calculate();
+                operation = null;
+            });
+            
+            function calculate() {
+                let result;
+                const prev = parseFloat(previousInput);
+                const current = parseFloat(currentInput);
+                
+                if (isNaN(prev)) return;
+                
+                switch (operation) {
+                    case '+':
+                        result = prev + current;
+                        break;
+                    case '-':
+                        result = prev - current;
+                        break;
+                    case '*':
+                        result = prev * current;
+                        break;
+                    case '/':
+                        result = prev / current;
+                        break;
+                    default:
+                        return;
+                }
+                
+                currentInput = result.toString();
+                previousInput = '';
+                resetInput = true;
+                updateDisplay();
+            }
+            
+            // Initialize the first tool as active
+            $('.sidebar-menu li:first').click();
+        });
+    </script>
+</body>
+</html>
