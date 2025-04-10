@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Language Translator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #e0f2f1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 50px;
+      color: #004d40;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 15px;
+      font-size: 1.2rem;
+      width: 300px;
+      border: 2px solid #26a69a;
+      border-radius: 10px;
+      outline: none;
+      margin-bottom: 15px;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 1.2rem;
+      background-color: #26a69a;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #00796b;
+    }
+
+    .message {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      display: none;
+    }
+
+    video {
+      margin-top: 20px;
+      display: none;
+      border: 3px solid #00796b;
+      border-radius: 15px;
+      width: 500px;
+      max-width: 90%;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Text to Sign Language Converter</h1>
+
+  <input type="text" id="textInput" placeholder="Enter your inputs">
+  <br>
+  <button onclick="convertToSign()">Convert</button>
+
+  <div class="message" id="loadingMsg">Converting to sign language...</div>
+
+  <video id="video1" controls src="school.mp4"></video>
+  <video id="video2" controls src="holiday.mp4"></video>
+  <video id="video3" controls src="election.mp4"></video>
+
+  <script>
+    function convertToSign() {
+      const text = document.getElementById("textInput").value.trim().toLowerCase();
+      const message = document.getElementById("loadingMsg");
+      const videos = {
+        school: document.getElementById("video1"),
+        holiday: document.getElementById("video2"),
+        election: document.getElementById("video3")
+      };
+
+      // Hide all videos first
+      Object.values(videos).forEach(v => {
+        v.style.display = 'none';
+        v.pause();
+        v.currentTime = 0;
+      });
+
+      // Show loading message
+      message.style.display = 'block';
+
+      setTimeout(() => {
+        message.style.display = 'none';
+
+        if (videos[text]) {
+          videos[text].style.display = 'block';
+          videos[text].play();
+        } else {
+          alert("Sorry, we don't have a sign language video for that word yet!");
+        }
+      }, 5000); // 5 seconds delay
+    }
+  </script>
+
+</body>
+</html>
