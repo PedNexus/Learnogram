@@ -147,6 +147,19 @@
     window.speechSynthesis.onvoiceschanged = () => {
       window.speechSynthesis.getVoices();
     };
+    const rawQuery = text.replace("who is", "")
+                     .replace("what is", "")
+                     .replace("tell me about", "")
+                     .trim();
+
+const query = rawQuery
+  .toLowerCase()
+  .split(" ")
+  .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter
+  .join("_"); // Replace spaces with underscores
+
+const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
+
   </script>
 </body>
 </html>
