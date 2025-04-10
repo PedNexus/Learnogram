@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Colorful Buddy Reader</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #ffebee, #e3f2fd);
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #ff4081;
+      margin-bottom: 10px;
+      animation: bounce 1.5s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    button {
+      padding: 12px 30px;
+      background-color: #ffd54f;
+      color: #5d4037;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ffca28;
+      transform: scale(1.05);
+    }
+
+    .cartoon {
+      width: 80px;
+      height: auto;
+      margin: 10px;
+      animation: floaty 4s infinite ease-in-out;
+    }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0px) rotate(-5deg); }
+      50% { transform: translateY(-15px) rotate(5deg); }
+    }
+
+    #displayText {
+      font-size: 1.2rem;
+      color: #333;
+      background: #fffde7;
+      border-radius: 20px;
+      padding: 20px;
+      margin: 20px auto;
+      width: 80%;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎉 Let's Make Your Text Fun!</h1>
+  <p style="font-size: 1.2rem; color: #444;">For little minds with big hearts 💖</p>
+
+  <div id="displayText">
+    Paragraphs are the building blocks of papers, serving to organize ideas and provide coherence in writing.
+    They typically consist of a group of sentences that focus on a single idea, with most paragraphs containing between three and five sentences.
+    The unity and coherence of ideas among sentences are what truly constitute a paragraph, rather than just its length.
+    Additionally, separate paragraphs can help contrast different points in an argument or provide breaks for readers,
+    enhancing the overall readability of the text.
+  </div>
+
+  <button onclick="generateVisual()">✨ Create Visual View</button>
+
+  <img src="https://cdn-icons-png.flaticon.com/512/742/742751.png" alt="Cute bunny" class="cartoon">
+  <img src="https://cdn-icons-png.flaticon.com/512/2949/2949902.png" alt="Balloon" class="cartoon">
+  <img src="https://cdn-icons-png.flaticon.com/512/3430/3430444.png" alt="Star" class="cartoon">
+
+  <script>
+    function extractKeyPoints(text) {
+      const sentences = text.split(/[\.\n]/).filter(s => s.trim().length > 30);
+      return sentences.slice(0, 5);
+    }
+
+    function generateVisual() {
+      const paragraph = document.getElementById("displayText").innerText;
+      if (!paragraph.trim()) {
+        alert("No magic here to show!");
+        return;
+      }
+
+      const keyPoints = extractKeyPoints(paragraph);
+
+      let newWindow = window.open("", "_blank");
+      newWindow.document.write("<html><head><title>Fun Summary</title><style>");
+      newWindow.document.write(`
+        body {
+          background: radial-gradient(circle at top, #ffe4e1, #e0f7fa);
+          font-family: 'Comic Sans MS', cursive, sans-serif;
+          text-align: center;
+          padding: 40px;
+        }
+        h1 {
+          font-size: 2.8rem;
+          color: #ff4081;
+          margin-bottom: 20px;
+          animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        .highlight {
+          margin: 20px auto;
+          padding: 25px;
+          border-radius: 25px;
+          background: #fff59d;
+          color: #37474f;
+          font-size: 2rem;
+          font-weight: bold;
+          width: 80%;
+          box-shadow: 4px 4px 15px rgba(0,0,0,0.1);
+          transition: transform 0.3s ease;
+          animation: pulse 3s infinite;
+        }
+        .highlight:nth-child(even) {
+          background: #a5d6a7;
+          transform: rotate(-1deg);
+        }
+        @keyframes pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.03); }
+          100% { transform: scale(1); }
+        }
+        .cartoon {
+          width: 100px;
+          margin: 15px;
+          animation: floaty 4s infinite ease-in-out;
+        }
+        @keyframes floaty {
+          0%, 100% { transform: translateY(0) rotate(-2deg); }
+          50% { transform: translateY(-12px) rotate(2deg); }
+        }
+      `);
+      newWindow.document.write("</style></head><body>");
+      newWindow.document.write("<h1>🌈 Magical Key Points</h1>");
+      newWindow.document.write(`<img src="https://cdn-icons-png.flaticon.com/512/1792/1792892.png" class="cartoon">`);
+      keyPoints.forEach(point => {
+        newWindow.document.write(`<div class='highlight'>${point}</div>`);
+      });
+      newWindow.document.write(`<img src="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" class="cartoon">`);
+      newWindow.document.write("</body></html>");
+    }
+  </script>
+
+</body>
+</html>
