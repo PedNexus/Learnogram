@@ -86,7 +86,7 @@
           <i class="fas fa-stop"></i> Stop
         </button>
         <button id="speakBtn" class="audio-btn">
-          <i class="fas fa-volume-up"></i> Read Aloud
+          <i class="fas fa-volume-up"></i> Play Audio
         </button>
       </div>
       <a href="index.html" class="back-btn">⬅ Back to Home</a>
@@ -132,8 +132,77 @@
     const pauseBtn = document.getElementById("pauseBtn");
     const stopBtn = document.getElementById("stopBtn");
 
-    let utterance;
+    // Audio files for each language (you would replace these with your actual audio files)
+    const audioFiles = {
+      'en': 'audio/diode_en.mp3',
+      'ta': 'audio/diode_ta.mp3',
+      'hi': 'audio/diode_hi.mp3',
+      'fr': 'audio/diode_fr.mp3',
+      'es': 'audio/diode_es.mp3',
+      'de': 'audio/diode_de.mp3',
+      'zh-CN': 'audio/diode_zh.mp3',
+      'ja': 'audio/diode_ja.mp3'
+    };
 
+    let audioElement = null;
+
+    function playAudio(langCode) {
+      // Stop any currently playing audio
+      if (audioElement) {
+        audioElement.pause();
+        audioElement.currentTime = 0;
+      }
+      
+      // Create new audio element
+      audioElement = new Audio(audioFiles[langCode]);
+      
+      // Enable control buttons
+      pauseBtn.disabled = false;
+      stopBtn.disabled = false;
+      
+      // Handle when audio ends
+      audioElement.addEventListener('ended', () => {
+        pauseBtn.disabled = true;
+        stopBtn.disabled = true;
+      });
+      
+      // Play the audio
+      audioElement.play().catch(e => console.error("Audio playback failed:", e));
+    }
+
+    speakBtn.addEventListener("click", () => {
+      const lang = langSelect.value || "en";
+      playAudio(lang);
+    });
+
+    pauseBtn.addEventListener("click", () => {
+      if (audioElement) {
+        if (audioElement.paused) {
+          audioElement.play();
+        } else {
+          audioElement.pause();
+        }
+      }
+    });
+
+    stopBtn.addEventListener("click", () => {
+      if (audioElement) {
+        audioElement.pause();
+        audioElement.currentTime = 0;
+        pauseBtn.disabled = true;
+        stopBtn.disabled = true;
+      }
+    });
+
+    // Keyboard Shortcuts
+    document.addEventListener("keydown", (e) => {
+      const key = e.key.toLowerCase();
+      if (key === "r") speakBtn.click();
+      else if (key === "p") pauseBtn.click();
+      else if (key === "s") stopBtn.click();
+    });
+
+    // Translation functionality remains the same
     langSelect.addEventListener('change', async () => {
       const selectedLang = langSelect.value;
       const originalText = contentDiv.innerText;
@@ -143,7 +212,7 @@
         return;
       }
 
-      const apiUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${selectedLang}&dt=t&q=${encodeURIComponent(originalText)}`;
+      const apiUrl = https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${selectedLang}&dt=t&q=${encodeURIComponent(originalText)};
 
       try {
         const response = await fetch(apiUrl);
@@ -158,14 +227,14 @@
 
         tags.forEach(tag => {
           if (tag.tagName === 'H1' || tag.tagName === 'H2') {
-            translatedHTML += `<${tag.tagName}>${paragraphs[paraIndex++] || ''}</${tag.tagName}>`;
+            translatedHTML += <${tag.tagName}>${paragraphs[paraIndex++] || ''}</${tag.tagName}>;
           } else if (tag.tagName === 'P') {
-            translatedHTML += `<p>${paragraphs[paraIndex++] || ''}</p>`;
+            translatedHTML += <p>${paragraphs[paraIndex++] || ''}</p>;
           } else if (tag.tagName === 'UL') {
             const liElements = tag.querySelectorAll('li');
             translatedHTML += '<ul>';
             liElements.forEach(() => {
-              translatedHTML += `<li>${paragraphs[paraIndex++] || ''}</li>`;
+              translatedHTML += <li>${paragraphs[paraIndex++] || ''}</li>;
             });
             translatedHTML += '</ul>';
           }
@@ -177,69 +246,7 @@
         alert('Translation failed. Please try again later.');
       }
     });
-
-    function speakText(text, langCode) {
-      if (speechSynthesis.speaking) {
-        speechSynthesis.cancel(); // stop any current speech
-      }
-
-      utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = langCode;
-
-      const voices = speechSynthesis.getVoices();
-      let selectedVoice = voices.find(voice => voice.lang === langCode) ||
-                          voices.find(voice => voice.lang.startsWith(langCode)) ||
-                          voices[0];
-
-      if (selectedVoice) {
-        utterance.voice = selectedVoice;
-      }
-
-      pauseBtn.disabled = false;
-      stopBtn.disabled = false;
-
-      speechSynthesis.speak(utterance);
-    }
-
-    speakBtn.addEventListener("click", () => {
-      const lang = langSelect.value || "ta";
-      const text = contentDiv.innerText;
-      speakText(text, lang);
-    });
-
-    pauseBtn.addEventListener("click", () => {
-  if (speechSynthesis.speaking) {
-    if (speechSynthesis.paused) {
-      console.log("Resuming...");
-      speechSynthesis.resume();  // 🔁 this resumes from paused point
-    } else {
-      console.log("Pausing...");
-      speechSynthesis.pause();   // ⏸ this pauses it
-    }
-  }
-});
-
-
-    stopBtn.addEventListener("click", () => {
-      if (speechSynthesis.speaking) {
-        speechSynthesis.cancel();
-        pauseBtn.disabled = true;
-        stopBtn.disabled = true;
-      }
-    });
-
-    // Keyboard Shortcuts
-    document.addEventListener("keydown", (e) => {
-      const key = e.key.toLowerCase();
-      if (key === "r") speakBtn.click();
-      else if (key === "p") pauseBtn.click();
-      else if (key === "s") stopBtn.click();
-    });
-
-    window.speechSynthesis.onvoiceschanged = () => {
-      console.log("Voices loaded.");
-    };
   </script>
-
+  
 </body>
 </html>
