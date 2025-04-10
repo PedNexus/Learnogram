@@ -48,6 +48,43 @@
       margin-top: 30px;
       font-size: 1.5rem;
       display: none;
+      text-align: center;
+    }
+
+    .dots {
+      display: inline-block;
+      margin-left: 10px;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin: 0 2px;
+      background-color: #00796b;
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+
+    .dot:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    .dot:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+
+    .dot:nth-child(3) {
+      animation-delay: 0;
+    }
+
+    @keyframes bounce {
+      0%, 80%, 100% {
+        transform: scale(0);
+      } 
+      40% {
+        transform: scale(1);
+      }
     }
 
     video {
@@ -68,7 +105,14 @@
   <br>
   <button onclick="convertToSign()">Convert</button>
 
-  <div class="message" id="loadingMsg">Converting to sign language...</div>
+  <div class="message" id="loadingMsg">
+    Converting to sign language
+    <span class="dots">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </span>
+  </div>
 
   <video id="video1" controls src="school1.mp4"></video>
   <video id="video2" controls src="holiday.mp4"></video>
@@ -78,7 +122,7 @@
     function convertToSign() {
       const text = document.getElementById("textInput").value.trim().toLowerCase();
       const message = document.getElementById("loadingMsg");
-      
+
       const keywords = {
         school: document.getElementById("video1"),
         holiday: document.getElementById("video2"),
@@ -104,7 +148,7 @@
             keywords[word].style.display = 'block';
             keywords[word].play();
             matched = true;
-            break; // Only show one video, first match
+            break;
           }
         }
 
