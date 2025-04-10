@@ -70,38 +70,46 @@
 
   <div class="message" id="loadingMsg">Converting to sign language...</div>
 
-  <video id="video1" controls src="school.webm"></video>
-  <video id="video2" controls src="holiday.webm"></video>
-  <video id="video3" controls src="election.webm"></video>
+  <video id="video1" controls src="school.mp4"></video>
+  <video id="video2" controls src="holiday.mp4"></video>
+  <video id="video3" controls src="election.mp4"></video>
 
   <script>
     function convertToSign() {
       const text = document.getElementById("textInput").value.trim().toLowerCase();
       const message = document.getElementById("loadingMsg");
-      const videos = {
+      
+      const keywords = {
         school: document.getElementById("video1"),
         holiday: document.getElementById("video2"),
         election: document.getElementById("video3")
       };
 
       // Hide all videos first
-      Object.values(videos).forEach(v => {
+      Object.values(keywords).forEach(v => {
         v.style.display = 'none';
         v.pause();
         v.currentTime = 0;
       });
 
-      // Show loading message
+      // Show "converting" message
       message.style.display = 'block';
 
       setTimeout(() => {
         message.style.display = 'none';
 
-        if (videos[text]) {
-          videos[text].style.display = 'block';
-          videos[text].play();
-        } else {
-          alert("Sorry, we don't have a sign language video for that word yet!");
+        let matched = false;
+        for (let word in keywords) {
+          if (text.includes(word)) {
+            keywords[word].style.display = 'block';
+            keywords[word].play();
+            matched = true;
+            break; // Only show one video, first match
+          }
+        }
+
+        if (!matched) {
+          alert("No matching sign language video found for your input.");
         }
       }, 5000); // 5 seconds delay
     }
